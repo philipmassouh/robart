@@ -23,7 +23,7 @@ git merge source-branch _# You may have to deal with merge conflicts_
 
 ### Making a virtual environment:
 
-Navigate to the robotic-access-and-retrieval directory\
+Navigate to the project directory\
 py -m venv env _# By convention the environment is usually called 'env'_\
 .\env\Scripts\activate _# Do this prior to using pip or running any code_
 
