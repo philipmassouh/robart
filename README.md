@@ -1,6 +1,6 @@
 # Kowledge-Based Robotic Access and Retrieval
 
-## Git command-line reference
+## Git Command-Line Reference
 
 ### Making a branch:
 
@@ -19,7 +19,7 @@ git checkout target-branch _# Usually target-branch = master_\
 git pull\
 git merge source-branch _# You may have to deal with merge conflicts_
 
-## Python virtual environment reference
+## Python Virtual Environment Reference
 
 ### Making a virtual environment:
 
