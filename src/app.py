@@ -11,7 +11,7 @@ from pathlib import Path
 from PySide6.QtWidgets import QApplication
 
 PROJECT_PATH = Path().resolve()
-CONFIG_PATH = os.path.join(PROJECT_PATH, 'config/config.ini')
+CONFIG_PATH = os.path.join(PROJECT_PATH, 'config', 'config.ini')
 
 config = ConfigParser()
 config.read(CONFIG_PATH)

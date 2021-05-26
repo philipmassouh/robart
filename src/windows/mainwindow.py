@@ -10,7 +10,7 @@ from PySide6.QtUiTools import QUiLoader
 from windows.window import Window
 
 PROJECT_PATH = Path().resolve()
-CONFIG_PATH = os.path.join(PROJECT_PATH, 'config/config.ini')
+CONFIG_PATH = os.path.join(PROJECT_PATH, 'config', 'config.ini')
 
 config = ConfigParser()
 config.read(CONFIG_PATH)
