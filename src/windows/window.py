@@ -26,7 +26,6 @@ class Window(QMainWindow):
     def __init__(self, ui_path, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        ui_path = os.path.join(PROJECT_PATH, 'views', 'mainwindow.ui')
         ui_file = QFile(ui_path)
         ui_file.open(QFile.ReadOnly)
         self.ui = loader.load(ui_file)
