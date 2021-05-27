@@ -26,10 +26,11 @@ class MainWindow(Window):
 
     '''
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, app, *args, **kwargs):
         ui_path = os.path.join(PROJECT_PATH, 'views', 'mainwindow.ui')
         super().__init__(ui_path, *args, **kwargs)
 
+        self.app = app
         self._configure_window()
 
     def _configure_window(self):
@@ -52,9 +53,54 @@ class MainWindow(Window):
 
         '''
 
-        frames, rate, channels = recorder.record()
+        self._toggle_listen_btn()
+        frames, rate, channels = recorder.record(self.app)
+        recorder.send_to_file(os.path.join('output', 'output.wav'))
         instruction = stt.recognize_speech(frames, rate, channels)
-        self.ui.instruction_inp.setText(instruction[0]['transcript'])
+        try:
+            self.ui.instruction_inp.setText(instruction[0]['transcript'])
+        except IndexError:
+            print('DEBUG: Nothing heard')
+
+    def _handle_stop_listening(self):
+        '''TODO
+
+        '''
+
+        self._toggle_listen_btn()
+        recorder.set_listening(False)
+        self.app.processEvents()
+
+    def _toggle_listen_btn(self):
+        '''TODO
+
+        '''
+
+        self.ui.listen_btn.clicked.disconnect()
+        if self.ui.listen_btn.text() == 'Listen':
+            self._set_listen()
+        else:
+            self._set_stop_listening()
+
+    def _set_listen(self):
+        '''TODO
+
+        '''
+
+        self.ui.listen_btn.setText('Stop Listening')
+        self.ui.listen_btn.clicked.connect(self._handle_stop_listening)
+        self.ui.instruction_inp.setEnabled(False)
+        self.ui.run_btn.setEnabled(False)
+
+    def _set_stop_listening(self):
+        '''TODO
+
+        '''
+
+        self.ui.listen_btn.setText('Listen')
+        self.ui.listen_btn.clicked.connect(self._handle_listen)
+        self.ui.instruction_inp.setEnabled(True)
+        self.ui.run_btn.setEnabled(True)
 
     def _handle_run(self):
         '''TODO

@@ -22,15 +22,21 @@ class Recorder:
                                   input=True,
                                   frames_per_buffer=self.chunk_size)
 
+        self.listening = True
+
+    def set_listening(self, listening):
+
+        self.listening = listening
+
     # Pass in a function that returns true when audio recording should stop
-    def record(self, interruptFunction=None):
+    def record(self, app=None):
         print("---RECORDING---")
 
         self.frames = []
 
-        for i in range(0, int(self.rate_hz / self.chunk_size * self.max_seconds)):
-            if interruptFunction is not None and interruptFunction():
-                break
+        while self.listening:
+            if app:
+                app.processEvents()
             data = self.stream.read(self.chunk_size)
             self.frames.append(data)
 
