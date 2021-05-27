@@ -35,6 +35,8 @@ class SpeechToText:
         except ApiException as ex:
             print("Function failed with status code " +
                   str(ex.code) + ": " + ex.message)
+        except IndexError as ex:
+            print("Nothing heard")
 
 
 '''

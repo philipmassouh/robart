@@ -57,10 +57,8 @@ class MainWindow(Window):
         frames, rate, channels = recorder.record(self.app)
         recorder.send_to_file(os.path.join('output', 'output.wav'))
         instruction = stt.recognize_speech(frames, rate, channels)
-        try:
+        if instruction:
             self.ui.instruction_inp.setText(instruction[0]['transcript'])
-        except IndexError:
-            print('DEBUG: Nothing heard')
 
     def _handle_stop_listening(self):
         '''TODO
