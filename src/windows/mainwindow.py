@@ -27,8 +27,7 @@ class MainWindow(Window):
     '''
 
     def __init__(self, app, *args, **kwargs):
-        ui_path = os.path.join(PROJECT_PATH, 'views', 'mainwindow.ui')
-        super().__init__(ui_path, *args, **kwargs)
+        super().__init__('main', *args, **kwargs)
 
         self.app = app
         self._configure_window()
