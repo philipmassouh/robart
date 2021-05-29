@@ -29,6 +29,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="run_btn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Run</string>
         </property>
