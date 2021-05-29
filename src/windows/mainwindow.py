@@ -44,7 +44,7 @@ class MainWindow(Window):
 
         '''
 
-        # self.ui.instruction_inp.textChanged.connect(self._handle_instruction)
+        self.ui.instruction_inp.textChanged.connect(self._handle_instruction)
         self.ui.listen_btn.clicked.connect(self._handle_listen)
         self.ui.run_btn.clicked.connect(self._handle_run)
 
@@ -58,7 +58,7 @@ class MainWindow(Window):
             self.ui.run_btn.setEnabled(True)
         else:
             self.ui.run_btn.setEnabled(False)
-            self.ui.instruction_inp.setText('Type instruction here...')
+            # self.ui.instruction_inp.setText('Type instruction here...')
 
     def _handle_listen(self):
         '''TODO
