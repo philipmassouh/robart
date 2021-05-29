@@ -3,7 +3,7 @@ from ibm_watson import SpeechToTextV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import ApiException
 from os.path import join, dirname
-from stt.record import Recorder
+from modules.stt.record import Recorder
 
 
 class SpeechToText:

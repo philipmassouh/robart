@@ -5,11 +5,11 @@ Created on: 5/25/2021
 
 import os
 from configparser import ConfigParser
+from modules.stt.record import Recorder
+from modules.stt.watson_stt import SpeechToText
+from modules.windows.window import Window
 from pathlib import Path
 from PySide6.QtUiTools import QUiLoader
-from stt.record import Recorder
-from stt.watson_stt import SpeechToText
-from windows.window import Window
 
 PROJECT_PATH = Path().resolve()
 CONFIG_PATH = os.path.join(PROJECT_PATH, 'config', 'config.ini')

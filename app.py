@@ -6,7 +6,7 @@ Created on: 5/22/2021
 import os
 import sys
 from configparser import ConfigParser
-from windows.mainwindow import MainWindow
+from modules.windows.mainwindow import MainWindow
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
 
