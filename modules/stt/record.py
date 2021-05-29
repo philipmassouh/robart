@@ -34,7 +34,8 @@ class Recorder:
 
         self.frames = []
 
-        while self.listening:
+        i = 0
+        while self.listening and i < int(self.rate_hz / self.chunk_size * self.max_seconds):
             if app:
                 app.processEvents()
             data = self.stream.read(self.chunk_size)
