@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>350</width>
     <height>91</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Robot Boi</string>
+   <string>Robotic Access and Retrieval</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -43,7 +43,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>300</width>
+     <width>350</width>
      <height>21</height>
     </rect>
    </property>
