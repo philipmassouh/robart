@@ -40,6 +40,7 @@ class Recorder:
                 app.processEvents()
             data = self.stream.read(self.chunk_size)
             self.frames.append(data)
+            i += 1
 
         print("---DONE RECORDING---")
 
