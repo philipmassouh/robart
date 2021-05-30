@@ -50,6 +50,24 @@ class MainWindow(Window):
         self.ui.listen_btn.clicked.connect(self._handle_listen)
         self.ui.run_btn.clicked.connect(self._handle_run)
 
+    def _enable_all(self):
+        '''TODO
+
+        '''
+
+        self.ui.instruction_inp.setEnabled(True)
+        self.ui.listen_btn.setEnabled(True)
+        self.ui.run_btn.setEnabled(True)
+
+    def _disable_all(self):
+        '''TODO
+
+        '''
+
+        self.ui.instruction_inp.setEnabled(False)
+        self.ui.listen_btn.setEnabled(False)
+        self.ui.run_btn.setEnabled(False)
+
     def _handle_instruction(self):
         '''TODO
 
@@ -121,10 +139,16 @@ class MainWindow(Window):
 
         '''
 
+        self.ui.showMinimized()
+        self._disable_all()
         instruction = self.ui.instruction_inp.text()
+        self.app.processEvents()
         if 'cube' in instruction.lower():
             self.controller.run('cube')
         elif 'box' in instruction.lower():
             self.controller.run('box')
         elif 'computer' in instruction.lower():
             self.controller.run('computer')
+        self.ui.instruction_inp.clear()
+        self._enable_all()
+        self.ui.showNormal()
