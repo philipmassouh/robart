@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Robotic Access and Retrieval</string>
+   <string>Robart</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -22,6 +22,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="listen_btn">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Listen</string>
         </property>

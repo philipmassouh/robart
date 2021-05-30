@@ -1,0 +1,93 @@
+#VRML_SIM R2021a utf8
+WorldInfo {
+  coordinateSystem "NUE"
+  contactProperties [
+    ContactProperties {
+      material1 "ExteriorWheelMat"
+      coulombFriction [
+        1.8, 0, 0.2
+      ]
+      frictionRotation 0.965 0
+      bounce 0
+      forceDependentSlip [
+        10, 0
+      ]
+    }
+    ContactProperties {
+      material1 "InteriorWheelMat"
+      coulombFriction [
+        1.8, 0, 0.2
+      ]
+      frictionRotation -0.965 0
+      bounce 0
+      forceDependentSlip [
+        10, 0
+      ]
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.0204511785646364 -0.9993289608076669 -0.03038712533929955 4.325748823197417
+  position 3.727042144595556 0.2583594391759132 -5.578823421161014
+}
+TexturedBackground {
+}
+WoodenBox {
+  translation 2.499999993761209 0.02496077865463737 -5.000000006238789
+  rotation 0.7071067813657997 8.19588853537713e-11 -0.7071067810072954 -3.540437983185508e-07
+  size 0.05 0.05 0.05
+  mass 0.1
+}
+PlasticCrate {
+  translation 5 0 -5
+  size 0.05 0.05 0.05
+}
+Ball {
+  translation -2.5 0.024913740204570274 -5
+  radius 0.025
+}
+TexturedBackgroundLight {
+}
+CardboardBox {
+  translation -5.02000001568349 0.02490194663940412 -5.00000001568349
+  rotation -0.7071067811723667 1.5283224662252277e-11 0.7071067812007283 8.939398921668274e-07
+  size 0.05 0.05 0.05
+  mass 0.25
+}
+RectangleArena {
+  floorSize 25 25
+  floorTileSize 1 1
+}
+Youbot {
+  hidden position_0_0 -6.39898258393862e-09
+  hidden position_0_1 -3.13414621890309e-09
+  hidden position_0_2 -6.310527211894623e-09
+  hidden position_0_3 3.2025930550547993e-09
+  hidden position_1_0 2.3708269248652993e-06
+  hidden rotation_2 0 0 1 2.370736813706458e-06
+  hidden position_2_0 2.1777045427349514e-07
+  hidden rotation_3 0 -1 0 2.1696418193818693e-07
+  hidden position_3_0 3.305298888668167e-07
+  hidden rotation_4 0 -1 0 3.305237444165179e-07
+  hidden position_4_0 -2.745635718781614e-09
+  hidden position_5_0 -1.2143014494702126e-09
+  hidden position_6_0 2.4087560099398305e-11
+  hidden position_6_1 -2.4133867080670635e-11
+  hidden translation_7 0 2.4087560099398305e-11 0.09
+  hidden translation_8 0 2.4133867080670635e-11 0.09
+  translation 0.019278180172032477 0.09887517583452586 -0.007806810099461712
+  rotation 0.9999955130696672 -0.0021182650882679323 0.0021182052659959602 -1.5708829276940177
+  controller "<extern>"
+}
+Transform {
+  translation -0.01 0 -5
+  scale 0.3 0.3 0.3
+  children [
+    DesktopComputer {
+      translation -1.4456028966473393e-17 -0.000507747617222489 0
+      rotation -0.730238325170864 0.27983771360032766 0.623251829117727 9.182516364149911e-17
+      name "desktop computer(1)"
+      mass 0.1
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import os
 from configparser import ConfigParser
 from modules.stt.record import Recorder
 from modules.stt.watson_stt import SpeechToText
+from modules.webots.demo_controller import DemoController
 from modules.windows.window import Window
 from pathlib import Path
 from PySide6.QtUiTools import QUiLoader
@@ -30,6 +31,7 @@ class MainWindow(Window):
         super().__init__('main', *args, **kwargs)
 
         self.app = app
+        self.controller = DemoController()
         self._configure_window()
 
     def _configure_window(self):
@@ -71,6 +73,8 @@ class MainWindow(Window):
         instruction = stt.recognize_speech(frames, rate, channels)
         if instruction:
             self.ui.instruction_inp.setText(instruction[0]['transcript'])
+            self.app.processEvents()
+            self._handle_run()
 
     def _handle_stop_listening(self):
         '''TODO
@@ -117,4 +121,10 @@ class MainWindow(Window):
 
         '''
 
-        print('RUN')
+        instruction = self.ui.instruction_inp.text()
+        if 'cube' in instruction.lower():
+            self.controller.run('cube')
+        elif 'box' in instruction.lower():
+            self.controller.run('box')
+        elif 'computer' in instruction.lower():
+            self.controller.run('computer')
