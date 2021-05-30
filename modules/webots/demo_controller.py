@@ -173,7 +173,7 @@ class DemoController:
         local_step = 0
         while self.robot.step(self.timestep) != -1 and self.running:
             if local_step == 0:
-                self.wheels_strafe(-1)
+                self.wheels_strafe(-0.9)
                 self.fingers_move(-1)
             elif local_step == 5:
                 self.fingers_stop()
