@@ -24,9 +24,9 @@ class Recorder:
 
         self.listening = True
 
-    def set_listening(self, listening):
+    def toggle_listening(self):
 
-        self.listening = listening
+        self.listening = not self.listening
 
     # Pass in a function that returns true when audio recording should stop
     def record(self, app=None):
@@ -44,9 +44,7 @@ class Recorder:
 
         print("---DONE RECORDING---")
 
-        self.stream.stop_stream()
-        self.stream.close()
-        self.p.terminate()
+        self.toggle_listening()
 
         # returns (frames, rate, channels)
         return (b''.join(self.frames), self.rate_hz, self.num_channels)
@@ -59,6 +57,12 @@ class Recorder:
         wf.setframerate(self.rate_hz)
         wf.writeframes(b''.join(self.frames))
         wf.close()
+
+    # Closes the input audio stream
+    def close_stream(self):
+        self.stream.stop_stream()
+        self.stream.close()
+        self.p.terminate()
 
 
 ''' 

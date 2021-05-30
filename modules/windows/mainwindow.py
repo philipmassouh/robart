@@ -100,7 +100,7 @@ class MainWindow(Window):
         '''
 
         self._toggle_listen_btn()
-        recorder.set_listening(False)
+        recorder.toggle_listening()
         self.app.processEvents()
 
     def _toggle_listen_btn(self):
@@ -152,3 +152,6 @@ class MainWindow(Window):
         self.ui.instruction_inp.clear()
         self._enable_all()
         self.ui.showNormal()
+
+    def closeEvent(self):
+        recorder.close_stream()
