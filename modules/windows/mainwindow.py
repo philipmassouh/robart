@@ -149,6 +149,8 @@ class MainWindow(Window):
             self.controller.run('box')
         elif 'computer' in instruction.lower():
             self.controller.run('computer')
+        elif 'place' in instruction.lower():
+            self.controller.run('place')
         self.ui.instruction_inp.clear()
         self._enable_all()
         self.ui.showNormal()

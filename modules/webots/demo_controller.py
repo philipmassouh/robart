@@ -34,7 +34,8 @@ class DemoController:
         self.get_item = {
             'cube': lambda: self.get_item_1(),
             'computer': lambda: self.get_item_3(),
-            'box': lambda: self.get_item_4()
+            'box': lambda: self.get_item_4(),
+            'place': lambda: self.place_item()
         }
         self._configure_robot()
         self._initialize_robot()
@@ -280,6 +281,57 @@ class DemoController:
                 self.wheels_stop()
             elif local_step == 620:
                 self.running = False
+            local_step += 1
+
+    def place_item(self):
+        local_step = 0
+        while self.robot.step(self.timestep) != -1 and self.running:
+            if local_step == 0:
+                self.arms_rotate([0, 1], [-0.135, -0.2])
+                self.wheels_strafe(1)
+            elif local_step == 40:
+                self.arms_stop()
+            elif local_step == 50:
+                self.arms_rotate([2, 1], [1, -0.2])
+            elif local_step == 85:
+                self.arms_stop()
+                self.fingers_move(-1)
+            elif local_step == 100:
+                self.fingers_stop()
+                self.wheels_stop()
+                self.arms_rotate([1], [-1])
+            elif local_step == 120:
+                self.wheels_drive(1)
+                self.arms_stop()
+            elif local_step == 157:
+                self.wheels_stop()
+            elif local_step == 160:
+                self.fingers_move(-0.1)
+                self.arms_rotate([0, 1, 3], [-1, 0.5, -0.1])
+            elif local_step == 218:
+                self.arms_stop()
+            elif local_step == 220:
+                self.fingers_move(1)
+            elif local_step == 222:
+                self.fingers_stop()
+            elif local_step == 230:
+                self.wheels_drive(-1)
+            elif local_step == 240:
+                self.arms_rotate([0, 1, 3], [1, -0.5, 0.1])
+            elif local_step == 267:
+                self.wheels_stop()
+            elif local_step == 298:
+                self.arms_stop()
+                self.arms_rotate([1], [1])
+                self.wheels_strafe(-1)
+            elif local_step == 318:
+                self.arms_rotate([2, 1], [-1, 0.2])
+            elif local_step == 353:
+                self.arms_rotate([0, 1, 2], [0.135, 0.2, 0])
+            elif local_step == 393:
+                self.arms_stop()
+            elif local_step == 398:
+                self.wheels_stop()
             local_step += 1
 
     def run(self, item):
