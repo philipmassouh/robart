@@ -332,6 +332,8 @@ class DemoController:
                 self.arms_stop()
             elif local_step == 398:
                 self.wheels_stop()
+            elif local_step == 420:
+                self.running = False
             local_step += 1
 
     def run(self, item):
