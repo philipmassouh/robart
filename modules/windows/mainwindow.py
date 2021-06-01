@@ -143,14 +143,14 @@ class MainWindow(Window):
         self._disable_all()
         instruction = self.ui.instruction_inp.text()
         self.app.processEvents()
-        if 'cube' in instruction.lower():
+        if 'place' in instruction.lower():
+            self.controller.run('place')
+        elif 'cube' in instruction.lower():
             self.controller.run('cube')
         elif 'box' in instruction.lower():
             self.controller.run('box')
         elif 'computer' in instruction.lower():
             self.controller.run('computer')
-        elif 'place' in instruction.lower():
-            self.controller.run('place')
         self.ui.instruction_inp.clear()
         self._enable_all()
         self.ui.showNormal()
