@@ -40,6 +40,7 @@ class MainWindow(Window):
         '''
 
         self._configure_callbacks()
+        self._configure_shortcuts()
 
     def _configure_callbacks(self):
         '''TODO
@@ -49,6 +50,13 @@ class MainWindow(Window):
         self.ui.instruction_inp.textChanged.connect(self._handle_instruction)
         self.ui.listen_btn.clicked.connect(self._handle_listen)
         self.ui.run_btn.clicked.connect(self._handle_run)
+
+    def _configure_shortcuts(self):
+        '''TODO
+
+        '''
+
+        self.ui.run_btn.setShortcut('Return')
 
     def _enable_all(self):
         '''TODO
