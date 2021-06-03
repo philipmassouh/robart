@@ -34,7 +34,7 @@ class Recorder:
         self.listening = True
 
     def toggle_listening(self):
-        unused = 123
+
         self.listening = not self.listening
 
     # Pass in a function that returns true when audio recording should stop
