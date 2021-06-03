@@ -1,4 +1,4 @@
-# Kowledge-Based Robotic Access and Retrieval
+# Knowledge-Based Robotic Access and Retrieval
 
 ## Git Command-Line Reference
 
