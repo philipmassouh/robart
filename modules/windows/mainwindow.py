@@ -40,6 +40,7 @@ class MainWindow(Window):
         '''
 
         self._configure_callbacks()
+        self._configure_shortcuts()
 
     def _configure_callbacks(self):
         '''TODO
@@ -49,6 +50,13 @@ class MainWindow(Window):
         self.ui.instruction_inp.textChanged.connect(self._handle_instruction)
         self.ui.listen_btn.clicked.connect(self._handle_listen)
         self.ui.run_btn.clicked.connect(self._handle_run)
+
+    def _configure_shortcuts(self):
+        '''TODO
+
+        '''
+
+        self.ui.run_btn.setShortcut('Return')
 
     def _enable_all(self):
         '''TODO
@@ -143,14 +151,14 @@ class MainWindow(Window):
         self._disable_all()
         instruction = self.ui.instruction_inp.text()
         self.app.processEvents()
-        if 'cube' in instruction.lower():
+        if 'place' in instruction.lower():
+            self.controller.run('place')
+        elif 'cube' in instruction.lower():
             self.controller.run('cube')
         elif 'box' in instruction.lower():
             self.controller.run('box')
         elif 'computer' in instruction.lower():
             self.controller.run('computer')
-        elif 'place' in instruction.lower():
-            self.controller.run('place')
         self.ui.instruction_inp.clear()
         self._enable_all()
         self.ui.showNormal()
