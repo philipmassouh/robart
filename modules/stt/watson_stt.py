@@ -1,16 +1,30 @@
-import json
+'''# EXAMPLE USAGE
+
+from modules.stt.record import Recorder
+from modules.watson_stt import SpeechToText
+
+s = SpeechToText()
+r = Recorder()
+frames, rate, channels = r.record()
+r.send_to_file()
+print(s.recognize_speech(frames, rate, channels))
+# [{'transcript': 'Mary had a little lamb', 'confidence': 0.99}]
+'''
+
+
 from ibm_watson import SpeechToTextV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import ApiException
-from os.path import join, dirname
-from modules.stt.record import Recorder
+
+
+default_key = 'R9hW3VQy4vgbFAHYoq9WWnzKoI5QioBVH9UAsWovlwVk'
+default_loc = ('https://api.us-south.speech-to-text.watson.cloud.ibm.com'
+               + '/instances/1aafab97-84e5-4963-8fdc-8d078b522a15')
 
 
 class SpeechToText:
     # these are the credentials associated with 'massouh.3@osu.edu'
     # you may initialize the speech-to-text service with your own credentials
-    default_key = 'R9hW3VQy4vgbFAHYoq9WWnzKoI5QioBVH9UAsWovlwVk'
-    default_loc = 'https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/1aafab97-84e5-4963-8fdc-8d078b522a15'
 
     def __init__(self, ssl_disable=False, key=default_key, loc=default_loc):
 
@@ -35,17 +49,5 @@ class SpeechToText:
         except ApiException as ex:
             print("Function failed with status code " +
                   str(ex.code) + ": " + ex.message)
-        except IndexError as ex:
+        except IndexError:
             print("Nothing heard")
-
-
-'''
-# EXAMPLE USAGE
-
-s = SpeechToText()
-r = Recorder()
-frames, rate, channels = r.record()
-r.send_to_file()
-print(s.recognize_speech(frames, rate, channels))
-# [{'transcript': "Mary had a little lamb who's fleece was white as snow ", 'confidence': 0.99}]
-'''

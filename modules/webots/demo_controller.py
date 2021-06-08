@@ -1,6 +1,6 @@
 """demo_controller controller."""
 
-from webots.controller import Robot, Keyboard, PositionSensor, Motor
+from webots.controller import Robot
 
 # Constants.
 TIME_STEP = 32

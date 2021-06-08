@@ -1,3 +1,12 @@
+'''# EXAMPLE USAGE
+
+r = Recorder()
+frames = r.record(quitOnKeypress) # where quitOnKeypress is externally defined
+r.send_to_file()
+
+'''
+
+
 import pyaudio
 import wave
 
@@ -35,7 +44,8 @@ class Recorder:
         self.frames = []
 
         i = 0
-        while self.listening and i < int(self.rate_hz / self.chunk_size * self.max_seconds):
+        limit = int(self.rate_hz / self.chunk_size * self.max_seconds)
+        while self.listening and i < limit:
             if app:
                 app.processEvents()
             data = self.stream.read(self.chunk_size)
@@ -63,14 +73,3 @@ class Recorder:
         self.stream.stop_stream()
         self.stream.close()
         self.p.terminate()
-
-
-''' 
-
-EXAMPLE USAGE
-
-r = Recorder()
-frames = r.record(quitOnKeypress) # where quitOnKeypress is externally defined
-r.send_to_file()
-
-'''
