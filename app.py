@@ -4,7 +4,6 @@ Created on: 5/22/2021
 '''
 
 import os
-import subprocess
 import sys
 from configparser import ConfigParser
 from modules.windows.mainwindow import MainWindow
