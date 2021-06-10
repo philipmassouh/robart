@@ -33,27 +33,26 @@ class Recorder:
 
         self.listening = True
 
-    def toggle_listening(self):
-
-        self.listening = not self.listening
+    def stop_listening(self):
+        self.listening = False
 
     def record(self, app=None):
         print("---RECORDING---")
 
         self.frames = []
 
-        i = 0
+        self.listening = True
+
         limit = int(self.rate_hz / self.chunk_size * self.max_seconds)
-        while self.listening and i < limit:
+        for i in range(limit):
             if app:
                 app.processEvents()
+                if not self.listening:
+                    break
             data = self.stream.read(self.chunk_size)
             self.frames.append(data)
-            i += 1
 
         print("---DONE RECORDING---")
-
-        self.toggle_listening()
 
         # returns (frames, rate, channels)
         return (b''.join(self.frames), self.rate_hz, self.num_channels)

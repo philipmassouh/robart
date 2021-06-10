@@ -108,7 +108,7 @@ class MainWindow(Window):
         '''
 
         self._toggle_listen_btn()
-        recorder.toggle_listening()
+        recorder.stop_listening()
         self.app.processEvents()
 
     def _toggle_listen_btn(self):

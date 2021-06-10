@@ -37,7 +37,7 @@ class MockApp:
 
     def processEvents(self):
         if self.state == 10:
-            self.recorder.toggle_listening()
+            self.recorder.stop_listening()
         else:
             self.state += 1
 
