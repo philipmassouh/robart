@@ -1,6 +1,7 @@
 from modules.stt.record import Recorder
 from types import SimpleNamespace
 
+
 class MockPyAudio:
     def __init__(self):
         self.opened = False
@@ -8,19 +9,25 @@ class MockPyAudio:
 
     def open(self, *args, **kwargs):
         self.opened = True
+
         class Stream:
             def read(self, chunk_size):
                 return b'F'
+
             def stop_stream(self):
                 pass
+
             def close(self):
                 pass
+
         return Stream()
 
     def terminate(self):
         self.terminated = True
 
+
 mock_pyaudio = SimpleNamespace(PyAudio=MockPyAudio, paInt16="paInt16")
+
 
 class MockApp:
 
