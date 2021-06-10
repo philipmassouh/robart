@@ -12,7 +12,7 @@ import wave
 
 
 class Recorder:
-    def __init__(self, max_sec=5):
+    def __init__(self, max_sec=5, pyaudio=pyaudio):
 
         # Max recording size if user doesn't stop
         self.max_seconds = max_sec
@@ -37,7 +37,6 @@ class Recorder:
 
         self.listening = not self.listening
 
-    # Pass in a function that returns true when audio recording should stop
     def record(self, app=None):
         print("---RECORDING---")
 
