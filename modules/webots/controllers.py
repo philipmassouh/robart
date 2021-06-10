@@ -112,6 +112,33 @@ class TextRobot(AbstractController):
         return output
 
 
+class WebotsController(AbstractController, Robot):
+
+    def __init__(self):
+        self.timestep = self.getBasicTimeStep()
+        self.wheels = [
+            self.getDevice('wheel1'),
+            self.getDevice('wheel2'),
+            self.getDevice('wheel3'),
+            self.getDevice('wheel4')
+        ]
+        self.arms = [
+            self.getDevice('arm1'),
+            self.getDevice('arm2'),
+            self.getDevice('arm3'),
+            self.getDevice('arm4'),
+            self.getDevice('arm5')
+        ]
+        self.fingers = [
+            self.getDevice('finger1'),
+            self.getDevice('finger2')
+        ]
+        self._initialize()
+
+    def _initialize(self):
+        pass
+
+
 if __name__ == '__main__':
     controller = RobotController(TextRobot)
     controller.drive_forward_(100, 10)
