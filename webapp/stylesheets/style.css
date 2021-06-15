@@ -3,16 +3,29 @@ html {
 }
 html, body {
   margin: 0;
-  padding:0;
+  padding: 0;
   height: 100%;
+  width: 100%;
   overflow-y: hidden;
   display: flex; 
-  flex-flow: column;
+  flex-direction: row;
+  text-align: center;
 }
-header {
-  padding: 0 10px 10px 10px;
+
+.left {
+  width: 25%;
+  margin: 1rem;
+}
+
+.right {
+  width: 75%;
+  margin: 1rem;
+  display: flex;
+  flex-flow: column;
 }
 
 #playerDiv {
   flex: 1;
+  margin: 1rem;
+  background-color: black;
 }

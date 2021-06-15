@@ -4,6 +4,8 @@ const { IamAuthenticator } = require('ibm-watson/auth');
 const AssistantV2 = require('ibm-watson/assistant/v2');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 
+const assistant_id = 'b5428c83-d98e-46e5-ad29-8db5cd50ea16';
+
 // Authenticats stt. Note: only last for 60mins.
 const speechToText = new SpeechToTextV1({
     authenticator: new IamAuthenticator({
@@ -30,6 +32,7 @@ const params = {
 
 // Create the stream.
 var recognizeStream = speechToText.recognizeUsingWebSocket(params);
+var assistant_session = null;
 
 // Listen for events.
 recognizeStream.on('data', function(event) { onEvent('data', event); });
@@ -48,10 +51,10 @@ function onEvent(name, event) {
 
 //Creates session.
 assistant.createSession({
-    assistantId: 'b5428c83-d98e-46e5-ad29-8db5cd50ea16'
+    assistantId: assistant_id
   })
     .then(res => {
-      console.log(JSON.stringify(res.result, null, 2));
+      assistant_session = res.result.session_id;
     })
     .catch(err => {
       console.log(err);
@@ -79,7 +82,20 @@ contextBridge.exposeInMainWorld(
             }
         },
         wa: (text) => {
-
+            assistant.message({
+                assistantId: assistant_id,
+                sessionId: assistant_session,
+                input: {
+                  'message_type': 'text',
+                  'text': text
+                  }
+                })
+            .then(res => {
+                console.log(JSON.stringify(res.result, null, 2));
+            })
+            .catch(err => {
+                console.log(err);
+            });
         }
     }
 );
