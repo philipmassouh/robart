@@ -153,8 +153,8 @@ button::-moz-focus-inner {
   z-index: 1;
   position: absolute;
   text-align: center;
-  left: calc(50% - 160px);
-  top: calc(50% - 84px);
+  left: calc(62.5% + 1rem - 160px);
+  top: calc(50% - 60px);
   background-color: white;
   width:300px;
   height: 100px;

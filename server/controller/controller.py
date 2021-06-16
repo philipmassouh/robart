@@ -1,6 +1,6 @@
 """demo_controller controller."""
 
-from webots.controller import Robot, Keyboard, PositionSensor, Motor
+from webots.controller import Robot, PositionSensor, Motor
 
 # Constants.
 TIME_STEP = 32
@@ -8,7 +8,7 @@ WMAX_VEL = 14.81
 AMAX_VEL = 1.5708
 
 
-class DemoController:
+class Controller:
 
     def __init__(self):
         self.robot = Robot()
@@ -339,5 +339,3 @@ class DemoController:
     def run(self, item):
         self.running = True
         self.get_item[item]()
-
-controller = DemoController()
