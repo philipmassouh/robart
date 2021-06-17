@@ -133,3 +133,6 @@ webapp/node_modules/
 
 # VS code settings.
 .vscode/
+
+# PyCharm
+.idea/

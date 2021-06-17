@@ -1,8 +1,9 @@
 import http.server
 import socketserver
-from server.controller.controller import Controller
+from server.controller.controllers import RobotController, TextRobot
 
-controller = Controller()
+robot = TextRobot()
+controller = RobotController(robot)
 
 class Handler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -17,7 +18,7 @@ class Handler(socketserver.BaseRequestHandler):
             value = self.data[pos2:self.data.find('\"', pos2)]
 
             if value == "cube":
-                controller.run(value)
+                
 
 
         # Send it worked to the client.
