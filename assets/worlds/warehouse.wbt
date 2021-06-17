@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.023682200955700575 -0.9916733829892437 -0.12658220581330856 4.412350766737396
-  position 9.89922233746513 1.1488602629480247 -1.4812497940136296
+  orientation 0.03936267940035974 -0.9833458782099578 -0.17743016450962099 4.14799260293497
+  position 11.103698362871711 1.9638581860204487 -3.134122467568351
 }
 TexturedBackground {
   texture "empty_office"
@@ -27,6 +27,17 @@ Floor {
   tileSize 1 1
   appearance ThreadMetalPlate {
   }
+}
+Transform {
+  translation 1.01 0.99 -0.33
+  scale 0.05 0.05 0.05
+  children [
+    CardboardBox {
+      translation 6.5625 -12.02 6.1677
+      name "cardboard box(1)"
+      mass 10
+    }
+  ]
 }
 Youbot {
   translation 7.20798 0.12 -0.415027
@@ -295,6 +306,9 @@ OilBarrel {
   rotation 0 1 0 2.8732483
   name "oil barrel(2)"
 }
+Transform {
+  scale 0.05 0.05 0.05
+}
 OilBarrel {
   translation 5.59631 0.44 11.0833
   rotation 0 -1 0 0.3403392
@@ -348,7 +362,7 @@ Transform {
   scale 0.05 0.05 0.05
   children [
     WoodenBox {
-      translation 83.4604 7.75 -0.386624
+      translation 83.7304 7.75 -0.386624
       rotation 0 -1 0 4.6928012867022945e-06
       name "wooden box(10)"
       mass 10
