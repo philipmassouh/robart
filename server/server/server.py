@@ -11,10 +11,12 @@ class Handler(socketserver.BaseRequestHandler):
 
         # Manages post methods.
         if 'POST' in self.data:
-            # pos1 = self.data.find('\"intent\":') + 10
+            pos1 = self.data.find('\"intent\":') + 10
             pos2 = self.data.find('\"value\":') + 9
-            # intent = self.data[pos1:self.data.find('\"', pos1)]
+            intent = self.data[pos1:self.data.find('\"', pos1)]
             value = self.data[pos2:self.data.find('\"', pos2)]
+
+            print(intent, value)
 
             if value == "cube":
                 controller.get_object_('obj1')
