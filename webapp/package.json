@@ -1,0 +1,30 @@
+{
+  "name": "package",
+  "version": "1.0.0",
+  "description": "Robart",
+  "main": "main.js",
+  "dependencies": {
+    "electron": "^13.1.2",
+    "ibm-watson": "^6.1.1",
+    "jquery": "^3.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philipmassouh/robart.git"
+  },
+  "keywords": [
+    "Cool",
+    "bot"
+  ],
+  "author": "Noah LaPolt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/philipmassouh/robart/issues"
+  },
+  "homepage": "https://github.com/philipmassouh/robart#readme"
+}
