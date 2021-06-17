@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from webots.controller import Robot
 
 
 TIME_STEP = 32
@@ -130,6 +129,11 @@ class TextRobot(AbstractController):
         print(output)
         return output
 
+
+try:
+    from webots.controller import Robot
+except Exception:
+    Robot = object
 
 class WebotsController(AbstractController, Robot):
 
