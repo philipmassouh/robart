@@ -136,3 +136,6 @@ webapp/node_modules/
 
 # PyCharm
 .idea/
+
+# Other editors
+.vscode/
