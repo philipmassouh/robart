@@ -29,7 +29,9 @@ class RobotController:
         self.robot.raise_arm_(20, 0.8)
         self.robot.turn_arm_(-30, 0.8)
         self.robot.grab_object_()
-        # self.robot.drive_backward_(self.object_distances[object], 0.8)
+        self.robot.turn_arm_(-30, -0.8)
+        self.robot.lower_arm_(20, 0.8)
+        self.robot.drive_backward_(self.object_distances[object], 0.8)
 
 
 class AbstractController(ABC):
@@ -260,8 +262,8 @@ class WebotsController(AbstractController, Robot):
         self._wait_for_time(20)
         self._stop_arms()
         self.close_fingers_()
-        self._start_arms([1, 2, 3], [-0.25, -0.25, -0.25])
-        self._wait_for_time(20)
+        self._start_arms([1, 2, 3], [-0.125, -0.125, -0.125])
+        self._wait_for_time(30)
         self._stop_arms()
 
     def open_fingers_(self):
@@ -270,8 +272,8 @@ class WebotsController(AbstractController, Robot):
         self._stop_fingers()
 
     def close_fingers_(self):
-        self._start_fingers(-0.1)
-        self._wait_for_time(15)
+        self._start_fingers(-0.0355)
+        self._wait_for_time(27)
         self._stop_fingers()
 
 

@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.49212493535040286 0.8117000494111545 0.3145728497380074 0.9375998155715335
-  position 5.531156577997088 1.4004436012551071 1.1464102096529023
+  orientation 0.023682200955700575 -0.9916733829892437 -0.12658220581330856 4.412350766737396
+  position 9.89922233746513 1.1488602629480247 -1.4812497940136296
 }
 TexturedBackground {
   texture "empty_office"
@@ -348,9 +348,10 @@ Transform {
   scale 0.05 0.05 0.05
   children [
     WoodenBox {
-      translation 84.0704 7.75 -0.386624
+      translation 83.4604 7.75 -0.386624
       rotation 0 -1 0 4.6928012867022945e-06
       name "wooden box(10)"
+      mass 10
     }
   ]
 }
