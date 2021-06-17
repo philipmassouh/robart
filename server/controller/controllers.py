@@ -135,6 +135,7 @@ try:
 except Exception:
     Robot = object
 
+
 class WebotsController(AbstractController, Robot):
 
     def __init__(self, name):

@@ -1,5 +1,6 @@
 from server.controller.controllers import RobotController, TextRobot
 
+
 def test_can_instantiate_robot_controller():
     RobotController(TextRobot, name='Robart')
 
