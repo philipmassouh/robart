@@ -29,7 +29,7 @@ class Handler(socketserver.BaseRequestHandler):
         self.request.sendall(b'HTTP/1.1 200 Success')
 
 class Server:
-    def __init__(self, host="localhost", port=8000):
+    def __init__(self, host="192.168.1.31", port=8000):
         self.HOST, self.PORT = host, port
 
     def start(self):
