@@ -15,9 +15,20 @@ class RobotController:
                    dir(self.robot) if not method.startswith('_') and
                    method.endswith('_')}
         self.__dict__.update(methods)
+        self.object_distances = {
+            'obj1': 120,
+            'obj2': 240,
+            'obj3': 355
+        }
 
     def __getattr__(self, name):
         return getattr(self.robot, name)
+
+    def get_object_(self, object):
+        self.robot.drive_forward_(self.object_distances[object], 0.8)
+        self.robot.raise_arm_(20, 0.8)
+        self.robot.turn_arm_(-30, 0.8)
+        # self.robot.drive_backward_(self.object_distances[object], 0.8)
 
 
 class AbstractController(ABC):
@@ -117,6 +128,8 @@ class TextRobot(AbstractController):
 class WebotsController(AbstractController, Robot):
 
     def __init__(self, name):
+        super().__init__()
+
         self.name = name
         self.timestep = int(self.getBasicTimeStep())
         self.wheels = [
@@ -137,9 +150,26 @@ class WebotsController(AbstractController, Robot):
             self.getDevice('finger2')
         ]
         self._initialize()
+        self.lower_arm_(40, 0.8)
 
     def _initialize(self):
-        pass
+        for arm in self.arms:
+            arm.setPosition(float('inf'))
+
+        for finger in self.fingers:
+            finger.setPosition(float('inf'))
+
+        for wheel in self.wheels:
+            wheel.setPosition(float('inf'))
+
+        self._stop_wheels()
+        self._stop_arms()
+        self._stop_fingers()
+
+    def _wait_for_time(self, time):
+        step = 0
+        while self.step(self.timestep) != -1 and step < time:
+            step += 1
 
     def _start_driving(self, speed):
         for wheel in self.wheels:
@@ -161,57 +191,67 @@ class WebotsController(AbstractController, Robot):
         for wheel in self.wheels:
             wheel.setVelocity(0)
 
+    def _start_arms(self, arms, speeds):
+        for arm, speed in zip(arms, speeds):
+            self.arms[arm].setVelocity(speed * AMAX_VEL)
+
+    def _stop_arms(self):
+        for arm in self.arms:
+            arm.setVelocity(0)
+
+    def _stop_fingers(self):
+        for finger in self.fingers:
+            finger.setVelocity(0)
+
     def drive_forward_(self, distance, speed):
         self._start_driving(speed)
-        step = 0
-        while self.step(self.timestep) != -1 and step < distance / speed:
-            step += 1
+        self._wait_for_time(distance / speed)
         self._stop_wheels()
 
     def drive_backward_(self, distance, speed):
         self._start_driving(-speed)
-        step = 0
-        while self.step(self.timestep) != -1 and step < distance / speed:
-            step += 1
+        self._wait_for_time(distance / speed)
         self._stop_wheels()
 
     def strafe_right_(self, distance, speed):
         self._start_strafing(speed)
-        step = 0
-        while self.step(self.timestep) != -1 and step < distance / speed:
-            step += 1
+        self._wait_for_time(distance / speed)
         self._stop_wheels()
 
     def strafe_left_(self, distance, speed):
         self._start_strafing(-speed)
-        step = 0
-        while self.step(self.timestep) != -1 and step < distance / speed:
-            step += 1
+        self._wait_for_time(distance / speed)
         self._stop_wheels()
 
     def turn_right_(self, degrees, speed):
         self._start_turning(speed)
-        step = 0
-        while self.step(self.timestep) != -1 and step < degrees / speed:
-            step += 1
+        self._wait_for_time(degrees / speed)
         self._stop_wheels()
 
     def turn_left_(self, degrees, speed):
         self._start_turning(-speed)
-        step = 0
-        while self.step(self.timestep) != -1 and step < degrees / speed:
-            step += 1
+        self._wait_for_time(degrees / speed)
         self._stop_wheels()
 
     def raise_arm_(self, distance, speed):
-        output = f'Raising arm distance {distance} at speed {speed}'
-        print(output)
-        return output
+        self._start_arms([1, 2, 3], [-speed, speed, -speed])
+        self._wait_for_time(distance / speed)
+        self._stop_arms()
 
     def lower_arm_(self, distance, speed):
-        output = f'Lowering arm distance {distance} at speed {speed}'
-        print(output)
-        return output
+        self._start_arms([1, 2, 3], [speed, -speed, speed])
+        self._wait_for_time(distance / speed)
+        self._stop_arms()
+
+    def turn_arm_(self, degrees, speed):
+        self._start_arms([0], [-speed])
+        self._wait_for_time(abs(degrees / speed))
+        self._stop_arms
+
+    def grab_object(self):
+        pass
+        # Here is where I left off. For now I'm thinking of having a standard position for the arm to reach to for each table
+        # so the robot just has to line itself up and call the same grab method.
 
     def open_fingers_(self):
         output = 'Opening fingers'

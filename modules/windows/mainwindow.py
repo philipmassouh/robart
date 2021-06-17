@@ -8,6 +8,7 @@ from configparser import ConfigParser
 from modules.stt.record import Recorder
 from modules.stt.watson_stt import SpeechToText
 from modules.webots.demo_controller import DemoController
+from modules.webots.controllers import RobotController, WebotsController
 from modules.windows.window import Window
 from pathlib import Path
 from PySide6.QtUiTools import QUiLoader
@@ -31,7 +32,7 @@ class MainWindow(Window):
         super().__init__('main', *args, **kwargs)
 
         self.app = app
-        self.controller = DemoController()
+        self.controller = RobotController(WebotsController, name='Robart')
         self._configure_window()
 
     def _configure_window(self):
@@ -147,21 +148,22 @@ class MainWindow(Window):
 
         '''
 
-        self.ui.showMinimized()
-        self._disable_all()
-        instruction = self.ui.instruction_inp.text()
-        self.app.processEvents()
-        if 'place' in instruction.lower():
-            self.controller.run('place')
-        elif 'cube' in instruction.lower():
-            self.controller.run('cube')
-        elif 'box' in instruction.lower():
-            self.controller.run('box')
-        elif 'computer' in instruction.lower():
-            self.controller.run('computer')
-        self.ui.instruction_inp.clear()
-        self._enable_all()
-        self.ui.showNormal()
+        # self.ui.showMinimized()
+        # self._disable_all()
+        # instruction = self.ui.instruction_inp.text()
+        # self.app.processEvents()
+        # if 'place' in instruction.lower():
+        #     self.controller.run('place')
+        # elif 'cube' in instruction.lower():
+        #     self.controller.run('cube')
+        # elif 'box' in instruction.lower():
+        #     self.controller.run('box')
+        # elif 'computer' in instruction.lower():
+        #     self.controller.run('computer')
+        # self.ui.instruction_inp.clear()
+        # self._enable_all()
+        # self.ui.showNormal()
+        self.controller.get_object_(self.ui.instruction_inp.text())
 
     def closeEvent(self):
         recorder.close_stream()

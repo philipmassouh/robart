@@ -34,7 +34,7 @@ def start():
 
     '''
 
-    os.startfile(r'C:\Program Files\Webots\msys64\mingw64\bin\webotsw.exe')
+    # os.startfile(r'C:\Program Files\Webots\msys64\mingw64\bin\webotsw.exe')
     app_window = MainWindow
     app = Application(app_window, sys.argv)
     app.exec()
