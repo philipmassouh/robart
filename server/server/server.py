@@ -2,9 +2,9 @@ import http.server
 import socketserver
 from server.controller.controller import Controller
 
-class Handler(socketserver.BaseRequestHandler):
-    controller = Controller()
+controller = Controller()
 
+class Handler(socketserver.BaseRequestHandler):
     def handle(self):
         # self.request is the TCP socket connected to the client
         self.data = self.request.recv(1024).strip().decode("utf-8")
@@ -15,15 +15,19 @@ class Handler(socketserver.BaseRequestHandler):
             pos2 = self.data.find('\"value\":') + 9
             intent = self.data[pos1:self.data.find('\"', pos1)]
             value = self.data[pos2:self.data.find('\"', pos2)]
-            print(intent, value)
+
+            if value == "cube":
+                controller.run(value)
 
 
         # Send it worked to the client.
         self.request.sendall(b'HTTP/1.1 200 Success')
 
+class Server:
+    def __init__(self, host="localhost", port=8000):
+        self.HOST, self.PORT = host, port
 
-HOST, PORT = "localhost", 8000
-
-with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
-    print("serving at port", PORT)
-    httpd.serve_forever()
+    def start(self):
+        with socketserver.TCPServer((self.HOST, self.PORT), Handler) as httpd:
+            print("Server started at: ", self.HOST, self.PORT)
+            httpd.serve_forever()
