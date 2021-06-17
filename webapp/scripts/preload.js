@@ -130,7 +130,7 @@ contextBridge.exposeInMainWorld(
 
                 // Post options.
                 var options = {
-                    hostname: hostname,
+                    hostname: "https://" + hostname,
                     port: 8000,
                     path: '',
                     method: 'POST',
