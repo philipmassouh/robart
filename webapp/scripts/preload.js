@@ -89,7 +89,7 @@ contextBridge.exposeInMainWorld(
                 recognizeStream.on('close', function(event) { onEvent('Close:', event); });
             }
         },
-        wa: (text) => {
+        wa: (text, hostname) => {
             // Sends user message to watson.
             assistant.message({
                 assistantId: assistant_id,
@@ -130,7 +130,7 @@ contextBridge.exposeInMainWorld(
 
                 // Post options.
                 var options = {
-                    hostname: 'localhost',
+                    hostname: hostname,
                     port: 8000,
                     path: '',
                     method: 'POST',

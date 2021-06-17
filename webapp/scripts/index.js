@@ -1,10 +1,12 @@
 var view = null,
   connectButton = null,
-  listenButton = null,
+  listenButton = null
+  overlay = null,
   textArea = null,
   audio = null,
   audioChunks = [],
-  playerDiv = null;
+  playerDiv = null,
+  hostname = null;
 
 var mobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 if (mobileDevice) {
@@ -55,19 +57,34 @@ function init() {
   listenButton = document.getElementById('ListenButton');
   textArea = document.getElementById('TextToSend');
   playerDiv = document.getElementById('playerDiv');
+  overlay = document.getElementById('prompt');
+  hostInput = document.getElementById('hostInput');
+}
+
+function show() {
+  overlay.style.display = "block";
+}
+
+function hide() {
+  overlay.style.display = "none";
 }
 
 function connect() {
   // This `streaming viewer` setups a broadcast streaming where the simulation is shown but it is not possible to control it.
   // For any other use, please refer to the documentation:
   // https://www.cyberbotics.com/doc/guide/web-simulation#how-to-embed-a-web-scene-in-your-website
-  view = new webots.View(playerDiv, mobileDevice);
-  view.broadcast = false;
-  view.setTimeout(-1); // disable timeout that stops the simulation after a given time
-  view.open('ws://localhost:1234', 'x3d');
-  view.onquit = disconnect;
-  connectButton.value = 'Disconnect';
-  connectButton.onclick = disconnect;
+  hostname = hostInput.value;
+  hide();
+
+  if (hostname && hostname !='') {
+    view = new webots.View(playerDiv, mobileDevice);
+    view.broadcast = false;
+    view.setTimeout(-1); // disable timeout that stops the simulation after a given time
+    view.open('ws://' + hostname + ':1234', 'x3d');
+    view.onquit = disconnect;
+    connectButton.value = 'Disconnect';
+    connectButton.onclick = disconnect;
+  }
 }
 
 function disconnect() {
@@ -75,11 +92,11 @@ function disconnect() {
   view = null;
   playerDiv.innerHTML = null;
   connectButton.value = 'Connect';
-  connectButton.onclick = connect;
+  connectButton.onclick = show;
 }
 
 function send() {
-  window.watson.wa(textArea.value);
+  window.watson.wa(textArea.value, hostname);
   textArea.value = "";
 }
 

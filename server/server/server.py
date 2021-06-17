@@ -1,8 +1,8 @@
 import http.server
 import socketserver
-from server.controller.controllers import RobotController, TextRobot
+from server.controller.controllers import RobotController, WebotsController
 
-controller = RobotController(TextRobot)
+controller = RobotController(WebotsController, "Robart")
 
 class Handler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -18,6 +18,10 @@ class Handler(socketserver.BaseRequestHandler):
 
             if value == "cube":
                 controller.get_object_('obj1')
+            elif value == "box":
+                controller.get_object_('obj2')
+            elif value == "crate":
+                controller.get_object_('obj3')
         
         # Send it worked to the client.
         self.request.sendall(b'HTTP/1.1 200 Success')

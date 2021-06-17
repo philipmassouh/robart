@@ -10,13 +10,21 @@
   </head>
 
   <body>
+    <div id="prompt">
+      <div>
+        <label>Host:</label>
+        <input class="btn" id="hostInput" type="password" value="localhost"/>
+        <input class="btn" type='button' value='Confirm' onclick='connect()'/>
+        <input class="btn" type='button' value='Cancel' onclick='hide()'/>
+      </div>
+    </div>
     <div class='left'>
       <header>
         <h2>Options</h2>
-        <input id='ConnectButton' type='button' value='Connect' onclick='connect()' />
-        <input id='ListenButton' type='button' value='Listen' onclick='listen()' />
-        <input id='TextToSend' type='text'/>
-        <input id='SendButton' type='button' value='Send' onclick='send()' />
+        <input id='ConnectButton' class="btn" type='button' value='Connect' onclick='show()'/>
+        <input id='ListenButton' class="btn" type='button' value='Listen' onclick='listen()' />
+        <input id='TextToSend' class="btn" type='text'/>
+        <input id='SendButton' class="btn" type='button' value='Send' onclick='send()' />
       </header>
       <div id='playerDiv'></div>
     </div>
