@@ -1,8 +1,8 @@
-import http.server
 import socketserver
 from server.controller.controllers import RobotController, WebotsController
 
 controller = RobotController(WebotsController, "Robart")
+
 
 class Handler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -24,9 +24,10 @@ class Handler(socketserver.BaseRequestHandler):
                 controller.get_object_('obj2')
             elif value == "crate":
                 controller.get_object_('obj3')
-        
+
         # Send it worked to the client.
         self.request.sendall(b'HTTP/1.1 200 Success')
+
 
 class Server:
     def __init__(self, host="192.168.1.31", port=8000):
