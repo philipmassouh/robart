@@ -28,6 +28,7 @@ class RobotController:
         self.robot.drive_forward_(self.object_distances[object], 0.8)
         self.robot.raise_arm_(20, 0.8)
         self.robot.turn_arm_(-30, 0.8)
+        self.robot.grab_object_()
         # self.robot.drive_backward_(self.object_distances[object], 0.8)
 
 
@@ -199,6 +200,10 @@ class WebotsController(AbstractController, Robot):
         for arm in self.arms:
             arm.setVelocity(0)
 
+    def _start_fingers(self, speed):
+        for finger in self.fingers:
+            finger.setVelocity(speed)
+
     def _stop_fingers(self):
         for finger in self.fingers:
             finger.setVelocity(0)
@@ -246,22 +251,28 @@ class WebotsController(AbstractController, Robot):
     def turn_arm_(self, degrees, speed):
         self._start_arms([0], [-speed])
         self._wait_for_time(abs(degrees / speed))
-        self._stop_arms
+        self._stop_arms()
 
-    def grab_object(self):
-        pass
-        # Here is where I left off. For now I'm thinking of having a standard position for the arm to reach to for each table
-        # so the robot just has to line itself up and call the same grab method.
+    # TEMP METHOD
+    def grab_object_(self):
+        self.open_fingers_()
+        self._start_arms([1, 2, 3], [0.25, 0.25, 0.25])
+        self._wait_for_time(20)
+        self._stop_arms()
+        self.close_fingers_()
+        self._start_arms([1, 2, 3], [-0.25, -0.25, -0.25])
+        self._wait_for_time(20)
+        self._stop_arms()
 
     def open_fingers_(self):
-        output = 'Opening fingers'
-        print(output)
-        return output
+        self._start_fingers(0.1)
+        self._wait_for_time(10)
+        self._stop_fingers()
 
     def close_fingers_(self):
-        output = 'Closing fingers'
-        print(output)
-        return output
+        self._start_fingers(-0.1)
+        self._wait_for_time(15)
+        self._stop_fingers()
 
 
 if __name__ == '__main__':
