@@ -12,12 +12,13 @@ html, body {
   text-align: center;
 }
 
-.left {
+.right {
+  display: none;
   width: 25%;
   padding: 1rem;
 }
 
-.right {
+.left {
   width: 75%;
   padding: 1rem;
   display: flex;
