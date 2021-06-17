@@ -164,6 +164,7 @@ class MainWindow(Window):
         # self._enable_all()
         # self.ui.showNormal()
         self.controller.get_object_(self.ui.instruction_inp.text())
+        self.controller.place_object_(self.ui.instruction_inp.text())
 
     def closeEvent(self):
         recorder.close_stream()

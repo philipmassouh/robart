@@ -25,13 +25,17 @@ class RobotController:
         return getattr(self.robot, name)
 
     def get_object_(self, object):
-        self.robot.drive_forward_(self.object_distances[object], 0.8)
+        self.robot.drive_forward_(self.object_distances[object], 0.5)
         self.robot.raise_arm_(20, 0.8)
         self.robot.turn_arm_(-30, 0.8)
         self.robot.grab_object_()
         self.robot.turn_arm_(-30, -0.8)
-        self.robot.lower_arm_(20, 0.8)
-        self.robot.drive_backward_(self.object_distances[object], 0.8)
+        self.robot.lower_arm_(20, 0.25)
+        self.robot.drive_backward_(self.object_distances[object], 0.5)
+        self.robot.store_object_()
+
+    def place_object_(self, object):
+        self.robot.pick_object_()
 
 
 class AbstractController(ABC):
@@ -262,9 +266,26 @@ class WebotsController(AbstractController, Robot):
         self._wait_for_time(20)
         self._stop_arms()
         self.close_fingers_()
-        self._start_arms([1, 2, 3], [-0.125, -0.125, -0.125])
+        self._start_arms([1, 2, 3, 4], [-0.125, -0.125, -0.125, 0.6])
         self._wait_for_time(30)
         self._stop_arms()
+
+    def store_object_(self):
+        self._wait_for_time(10)
+        self._start_arms([4], [-0.6])
+        self._wait_for_time(30)
+        self._stop_arms()
+
+    def pick_object_(self):
+        # self.open_fingers_()
+        # self._start_arms([0, 2, 3], [0.1, 0.25, -0.15])
+        # self._wait_for_time(12)
+        # self._stop_arms()
+        # self.close_fingers_()
+        # self._start_arms([0, 2, 3], [-0.1, -0.25, 0.15])
+        # self._wait_for_time(12)
+        # self._stop_arms()
+        pass
 
     def open_fingers_(self):
         self._start_fingers(0.1)
@@ -272,7 +293,7 @@ class WebotsController(AbstractController, Robot):
         self._stop_fingers()
 
     def close_fingers_(self):
-        self._start_fingers(-0.0355)
+        self._start_fingers(-0.0357)
         self._wait_for_time(27)
         self._stop_fingers()
 
