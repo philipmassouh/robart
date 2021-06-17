@@ -49,3 +49,19 @@ pip install -r requirements.txt
 
 pip install python-library\
 pip freeze > requirements.txt
+
+### Adding node.js:
+
+go to https://nodejs.org/en/ and download the LTS version and install it.
+
+### Adding node.js libraries:
+
+run:
+cd webapp
+npm install
+
+### Starting everything:
+
+in \robart run: py app.py
+in \robart\webapp run: npm start
+in "C:\Program Files\Webots\msys64\mingw64\bin>" run: webotsw.exe --stream "C:\{your file path}\robart\assets\empty.wbt
