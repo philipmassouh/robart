@@ -7,7 +7,7 @@ class OrderManager(threading.Thread):
         self.running = True
         self.orders = []
         self.controller = RobotController(WebotsController, "Robart")
-    
+
     def run(self):
         while self.running:
             # Gets the oldest order.
