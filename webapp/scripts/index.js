@@ -100,6 +100,12 @@ function send() {
   textArea.value = "";
 }
 
+/**
+ * Terminates the server.
+ * WARNING DOING THIS WILL REQUIRE A SERVER RESTART BY HOST.
+ */
+function restart_server() { window.watson.restart_server(hostname); }
+
 function listen() {
   audio.start();
   window.watson.stt();

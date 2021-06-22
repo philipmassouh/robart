@@ -1,39 +1,80 @@
+import os
+import subprocess
 import socketserver
-from server.controller.controllers import RobotController, WebotsController
-
-controller = RobotController(WebotsController, "Robart")
+from server.server.order_manager import OrderManager
 
 
-class Handler(socketserver.BaseRequestHandler):
-    def handle(self):
-        # self.request is the TCP socket connected to the client
-        self.data = self.request.recv(1024).strip().decode("utf-8")
-
-        # Manages post methods.
-        if 'POST' in self.data:
-            pos1 = self.data.find('\"intent\":') + 10
-            pos2 = self.data.find('\"value\":') + 9
-            intent = self.data[pos1:self.data.find('\"', pos1)]
-            value = self.data[pos2:self.data.find('\"', pos2)]
-
-            print(intent, value)
-
-            if value == "cube":
-                controller.get_object_('obj1')
-            elif value == "box":
-                controller.get_object_('obj2')
-            elif value == "crate":
-                controller.get_object_('obj3')
-
-        # Send it worked to the client.
-        self.request.sendall(b'HTTP/1.1 200 Success')
-
-
-class Server:
+class Server(socketserver.BaseRequestHandler):
     def __init__(self, host="192.168.1.31", port=8000):
-        self.HOST, self.PORT = host, port
+        # Check if webots is running. Takes a moment.
+        started = False
+        r = os.popen('tasklist /v').read().strip().split('\n')  # Gets all running exes.
+        for i in range(len(r)):                                 # Loops through all exes.
+            if "webotsw.exe" in r[i]:
+                started = True
+                break
 
+        # Opens webots if it wasn't running.
+        if not started:
+            # Webots location and world.
+            webots = os.environ.get('WEBOTS_HOME') + "/msys64/mingw64/bin/webotsw.exe"
+            world = os.getcwd() + "/assets/warehouse.wbt"
+
+            # Opens webots.
+            subprocess.Popen([webots, "--stream", world])
+
+            # Pauses for program to open for a moment.
+            # Using a for loop so its based on the system.
+            for q in range(150000000):
+                # Little loading bar for fun.
+                if (q + 1) % 1500000 == 0:
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    print(' ', int(q / 1500000), '.0%', sep='')
+                    for _ in range(int(q / 1500000)):
+                        print('=', end='')
+
+            # Clear and newline to look nice.
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print()
+
+        # Initializes variables.
+        self.HOST = host
+        self.PORT = port
+        self.om = OrderManager()
+        self.running = False
+
+    # Makes object callable.
+    def __call__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    # Handles HTTP requests.
+    def handle(self):
+        self.running = False
+
+    # Manages GET requests.
+    def do_GET(self):
+        pass
+
+    # Manages PUT requests.
+    def do_PUT(self):
+        pass
+
+    # Starts the server.
     def start(self):
-        with socketserver.TCPServer((self.HOST, self.PORT), Handler) as httpd:
+        # Starts the order manager.
+        self.om.start()
+
+        # Starts the server.
+        self.running = True
+
+        # Starts the server.
+        with socketserver.TCPServer((self.HOST, self.PORT), self) as httpd:
             print("Server started at: ", self.HOST, self.PORT)
-            httpd.serve_forever()
+
+            # HTTP request loop.
+            while self.running:
+                httpd.handle_request()
+
+            # Stops server and order manager.
+            httpd.server_close()
+            self.om.stop()
