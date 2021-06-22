@@ -1,7 +1,8 @@
 import os
-import subprocess   
+import subprocess
 import socketserver
 from server.server.order_manager import OrderManager
+
 
 class Server(socketserver.BaseRequestHandler):
     def __init__(self, host="192.168.1.31", port=8000):
@@ -12,7 +13,7 @@ class Server(socketserver.BaseRequestHandler):
             if "webotsw.exe" in r[i]:
                 started = True
                 break
-        
+       
         # Opens webots if it wasn't running.
         if not started:
             # Webots location and world.
@@ -22,18 +23,18 @@ class Server(socketserver.BaseRequestHandler):
             # Opens webots.
             subprocess.Popen([webots, "--stream", world])
 
-            # Pauses for program to open for a moment. 
+            # Pauses for program to open for a moment.
             # Using a for loop so its based on the system.
             for q in range(150000000):
                 # Little loading bar for fun.
                 if (q + 1) % 1500000 == 0:
-                    os.system('cls' if os.name=='nt' else 'clear')
+                    os.system('cls' if os.name == 'nt' else 'clear')
                     print(' ', int(q / 1500000), '.0%', sep='')
                     for _ in range(int(q / 1500000)):
                         print('=', end='')
 
             # Clear and newline to look nice.
-            os.system('cls' if os.name=='nt' else 'clear')
+            os.system('cls' if os.name == 'nt' else 'clear')
             print()
 
         # Initializes variables.

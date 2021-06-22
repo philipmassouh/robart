@@ -1,6 +1,7 @@
 import threading
 from server.controller.controllers import RobotController, WebotsController
 
+
 class OrderManager(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
