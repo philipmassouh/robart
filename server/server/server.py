@@ -13,7 +13,7 @@ class Server(socketserver.BaseRequestHandler):
             if "webotsw.exe" in r[i]:
                 started = True
                 break
-       
+
         # Opens webots if it wasn't running.
         if not started:
             # Webots location and world.
