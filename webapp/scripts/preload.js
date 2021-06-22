@@ -162,6 +162,43 @@ contextBridge.exposeInMainWorld(
             .catch(err => {
                 console.log(err);
             });
+        },
+        restart_server: (hostname) => {
+            // Turns data into json
+            var data = JSON.stringify({
+                intent: 'stop',
+                value: 'END'
+            });
+
+            // Post options.
+            var options = {
+                hostname: hostname,
+                port: 8000,
+                path: '',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': data.length
+                }
+            }
+
+            // Makes the https request to update the robot.
+            var req = https.request(options, res => {
+                console.log(res.statusCode);
+                
+                res.on('data', d => {
+                    process.stdout.write(d)
+                });
+            });
+
+            // Error log.
+            req.on('error', error => {
+                console.error(error)
+            });
+
+            // Write data.
+            req.write(data);
+            req.end();
         }
     }
 );

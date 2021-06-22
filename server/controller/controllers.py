@@ -161,7 +161,6 @@ class WebotsController(AbstractController, Robot):
             self.getDevice('finger2')
         ]
         self._initialize()
-        self.lower_arm_(40, 0.8)
 
     def _initialize(self):
         for arm in self.arms:
