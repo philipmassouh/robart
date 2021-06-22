@@ -64,4 +64,3 @@ npm install
 
 in \robart run: py app.py
 in \robart\webapp run: npm start
-in "C:\Program Files\Webots\msys64\mingw64\bin>" run: webotsw.exe --stream "C:\{your file path}\robart\assets\empty.wbt
