@@ -139,3 +139,6 @@ webapp/node_modules/
 
 # Other editors
 .vscode/
+
+# credentials
+restAuth.json
