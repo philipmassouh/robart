@@ -5,23 +5,36 @@ const AssistantV2 = require('ibm-watson/assistant/v2');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const https = require('http');
 
+try {
+    const authTokens = fs.readFileSync('./restAuth.json', 'utf8');
+    const authTokens = JSON.parse(data);
+    let sttKey = authTokens[0].apikey;
+    let sttUrl = authTokens[0].serviceUrl;
+    let assKey = authTokens[1].apikey;
+    let assURl = authTokens[1].serviceUrl;
+
+} catch (err) {
+    console.log(`Error reading restAuth.json from disk.`, err);
+    //! TODO: PROGRAM NEEDS TO STOP HERE AND QUERY USER FOR API INFO
+}
+
 const assistant_id = 'b5428c83-d98e-46e5-ad29-8db5cd50ea16';
 
 // Authenticats stt. Note: only last for 60mins.
 const speechToText = new SpeechToTextV1({
     authenticator: new IamAuthenticator({
-      apikey: 'R9hW3VQy4vgbFAHYoq9WWnzKoI5QioBVH9UAsWovlwVk',
+      apikey: sttKey,
     }),
-    serviceUrl: 'https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/1aafab97-84e5-4963-8fdc-8d078b522a15',
+    serviceUrl: sttUrl
 });
 
 // Authenticats wa. Note: only last for 60mins.
 const assistant = new AssistantV2({
     version: '2020-04-01',
     authenticator: new IamAuthenticator({
-        apikey: 'nK1ePaVkS-Vnd9vmVFFr7Y-Pcso0-whbsVPRLqX2e87r',
+        apikey: assKey,
     }),
-    serviceUrl: 'https://api.us-south.assistant.watson.cloud.ibm.com/instances/7e0acc43-e72c-44b6-ae40-3ce992047bd2'
+    serviceUrl: assURl
 });
 
 //Sets up speech to text.
