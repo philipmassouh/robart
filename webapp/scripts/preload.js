@@ -100,40 +100,14 @@ contextBridge.exposeInMainWorld(
                   }
                 })
             .then(res => {
-                // Finds the highest confident intent.
-                max = [0, 0];
-                for (var i = 0; i < res.result.output.intents.length; i++) {
-                    e = res.result.output.intents[i];
-                    if(e.confidence > max[0]) {
-                        max[0] = e.confidence;
-                        max[1] = i;
-                    }
-                }
-                var intent = res.result.output.intents[max[1]].intent;
-
-                // Finds the highest confident entity to get.
-                max = [0, 0];
-                for (var i = 0; i < res.result.output.entities.length; i++) {
-                    e = res.result.output.entities[i];
-                    if(e.confidence > max[0]) {
-                        max[0] = e.confidence;
-                        max[1] = i;
-                    }
-                }
-                var value = res.result.output.entities[max[1]].value;
-
-                // Turns data into json
-                var data = JSON.stringify({
-                    intent: intent,
-                    value: value
-                });
-
+                data = JSON.stringify(res.result)
+                
                 // Post options.
                 var options = {
                     hostname: hostname,
                     port: 8000,
                     path: '',
-                    method: 'POST',
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Content-Length': data.length
@@ -142,7 +116,6 @@ contextBridge.exposeInMainWorld(
 
                 // Makes the https request to update the robot.
                 var req = https.request(options, res => {
-                    console.log("Here " + res);
                     console.log(res.statusCode);
                   
                     res.on('data', d => {
@@ -160,32 +133,24 @@ contextBridge.exposeInMainWorld(
                 req.end();
             })
             .catch(err => {
-                console.log(err);
+                console.log("Here" + err);
             });
         },
         restart_server: (hostname) => {
-            // Turns data into json
-            var data = JSON.stringify({
-                intent: 'stop',
-                value: 'END'
-            });
-
             // Post options.
             var options = {
                 hostname: hostname,
                 port: 8000,
                 path: '',
-                method: 'POST',
+                method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Content-Length': data.length
+                    'Content-Type': 'text',
+                    'Content-Length': 4
                 }
             }
 
             // Makes the https request to update the robot.
             var req = https.request(options, res => {
-                console.log(res.statusCode);
-                
                 res.on('data', d => {
                     process.stdout.write(d)
                 });
@@ -195,10 +160,6 @@ contextBridge.exposeInMainWorld(
             req.on('error', error => {
                 console.error(error)
             });
-
-            // Write data.
-            req.write(data);
-            req.end();
         }
     }
 );
