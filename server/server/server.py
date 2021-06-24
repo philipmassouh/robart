@@ -7,7 +7,7 @@ from server.server.order_manager import OrderManager
 class Server(socketserver.BaseRequestHandler):
     def __init__(self, host="192.168.1.31", port=8000):
         # Check if webots is running. Takes a moment.
-        started = False
+        started = True
         r = os.popen('tasklist /v').read().strip().split('\n')  # Gets all running exes.
         for i in range(len(r)):                                 # Loops through all exes.
             if "webotsw.exe" in r[i]:
@@ -49,15 +49,46 @@ class Server(socketserver.BaseRequestHandler):
 
     # Handles HTTP requests.
     def handle(self):
-        self.running = False
+        data = str(self.request.recv(1024), "utf-8").split('\n')
+        header_end = data.index('\r')
+        method = data[0]
+        header = data[1:header_end]
+        message = data[header_end + 1:len(data)]
+
+        # Handles the different HTTP requests.
+        if 'GET' in method:
+            self.do_GET(header, message)
+        elif 'PUT' in method:
+            self.do_PUT(header, message)
+        else:
+            self.request.send(bytes("HTTP/1.1 503 Service Unavailable\r\n\n This server is not normal.", 'utf-8'))
+
+        
 
     # Manages GET requests.
-    def do_GET(self):
-        pass
+    def do_GET(self, header, message):
+        self.request.send(bytes("HTTP/1.1 200 OK\r\n\n", 'utf-8'))
 
     # Manages PUT requests.
-    def do_PUT(self):
-        pass
+    def do_PUT(self, header, message):
+        self.request.send(bytes("HTTP/1.1 200 OK\r\n\n", 'utf-8'))
+
+        # Log data in console.
+        print("Recivied data from - ", self.client_address)
+
+        # Kills the server if a kill command was sent.
+        # DEV ONLY REMOVE IN PRODUCTION.
+        print(message)
+        if 'stop' in message:
+            self.stop()
+
+    def stop(self):
+        self.running = False
+
+        # When stoping server restart sim:
+        # from controller import Supervisor
+        # sup = Supervisor(Robot)
+        # sup.simulationReset()
 
     # Starts the server.
     def start(self):
