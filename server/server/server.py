@@ -61,9 +61,10 @@ class Server(socketserver.BaseRequestHandler):
         elif 'PUT' in method:
             self.do_PUT(header, message)
         else:
-            self.request.send(bytes("HTTP/1.1 503 Service Unavailable\r\n\n This server is not normal.", 'utf-8'))
-
-        
+            self.request.send(bytes(
+                "HTTP/1.1 503 Service Unavailable\r\n\n This server is not normal.",
+                'utf-8'
+            ))
 
     # Manages GET requests.
     def do_GET(self, header, message):
