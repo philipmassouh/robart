@@ -160,10 +160,6 @@ contextBridge.exposeInMainWorld(
             req.on('error', error => {
                 console.error(error)
             });
-
-            // Write data.
-            req.write('stop');
-            req.end();
         }
     }
 );
