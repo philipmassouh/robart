@@ -7,7 +7,6 @@ from server.server.order_manager import OrderManager
 class Server(socketserver.BaseRequestHandler):
     def __init__(self, host="192.168.1.31", port=8000):
         # Check if webots is running. Takes a moment.
-        started = True
         r = os.popen('tasklist /v').read().strip().split('\n')  # Gets all running exes.
         for i in range(len(r)):                                 # Loops through all exes.
             if "webotsw.exe" in r[i]:
