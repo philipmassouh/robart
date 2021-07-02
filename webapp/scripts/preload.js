@@ -57,6 +57,64 @@ function onEvent(name, event) {
     }
 };
 
+function watson_assistant(text, hostname) {
+    // Sends user message to watson.
+    assistant.message({
+        assistantId: assistant_id,
+        sessionId: assistant_session,
+        input: {
+          'message_type': 'text',
+          'text': text
+          }
+        })
+    .then(res => {
+        data = JSON.stringify(res.result)
+        
+        // Post options.
+        var options = {
+            hostname: hostname,
+            port: 8000,
+            path: '',
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            }
+        }
+
+        // Makes the https request to update the robot.
+        var req = https.request(options, res => {
+            console.log(res.statusCode);
+          
+            res.on('data', d => {
+              process.stdout.write(d)
+            });
+        });
+
+        // Error log.
+        req.on('error', error => {
+            console.error(error)
+        });
+
+        // Write data.
+        req.write(data);
+        req.end();
+    }).catch(err => {
+        // Recreates the session
+        assistant.createSession({
+            assistantId: assistant_id
+        })
+        .then(res => {
+            assistant_session = res.result.session_id;
+        })
+        .catch(err => {
+            console.log(err);
+        });
+        
+        watson_assistant(text, hostname);
+    });
+}
+
 //Creates session.
 assistant.createSession({
     assistantId: assistant_id
@@ -90,76 +148,11 @@ contextBridge.exposeInMainWorld(
             }
         },
         wa: (text, hostname) => {
-            // Sends user message to watson.
-            assistant.message({
-                assistantId: assistant_id,
-                sessionId: assistant_session,
-                input: {
-                  'message_type': 'text',
-                  'text': text
-                  }
-                })
-            .then(res => {
-                data = JSON.stringify(res.result)
-                
-                // Post options.
-                var options = {
-                    hostname: hostname,
-                    port: 8000,
-                    path: '',
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Content-Length': data.length
-                    }
-                }
-
-                // Makes the https request to update the robot.
-                var req = https.request(options, res => {
-                    console.log(res.statusCode);
-                  
-                    res.on('data', d => {
-                      process.stdout.write(d)
-                    });
-                });
-
-                // Error log.
-                req.on('error', error => {
-                    console.error(error)
-                });
-
-                // Write data.
-                req.write(data);
-                req.end();
-            })
-            .catch(err => {
-                console.log("Here" + err);
-            });
+            watson_assistant(text, hostname);
         },
         restart_server: (hostname) => {
             // Post options.
-            var options = {
-                hostname: hostname,
-                port: 8000,
-                path: '',
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'text',
-                    'Content-Length': 4
-                }
-            }
-
-            // Makes the https request to update the robot.
-            var req = https.request(options, res => {
-                res.on('data', d => {
-                    process.stdout.write(d)
-                });
-            });
-
-            // Error log.
-            req.on('error', error => {
-                console.error(error)
-            });
+            fetch('http://' + hostname + ':8000')
         }
     }
 );
