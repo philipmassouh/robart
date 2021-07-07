@@ -2,11 +2,13 @@ import os
 import json
 import subprocess
 import socketserver
+from ibm_watson import DiscoveryV2
 from server.server.order_manager import OrderManager
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 class Server(socketserver.BaseRequestHandler):
     def __init__(self, host="192.168.1.31", port=8000):
-        started = True
+        started = False
         # Check if webots is running. Takes a moment.
         r = os.popen('tasklist /v').read().strip().split('\n')  # Gets all running exes.
         for i in range(len(r)):                                 # Loops through all exes.
@@ -18,7 +20,7 @@ class Server(socketserver.BaseRequestHandler):
         if not started:
             # Webots location and world.
             webots = os.environ.get('WEBOTS_HOME') + "/msys64/mingw64/bin/webotsw.exe"
-            world = os.getcwd() + "/assets/warehouse.wbt"
+            world = os.getcwd() + "./assets/warehouse.wbt"
 
             # Opens webots.
             subprocess.Popen([webots, "--stream", world])
@@ -37,10 +39,14 @@ class Server(socketserver.BaseRequestHandler):
             os.system('cls' if os.name == 'nt' else 'clear')
             print()
 
+        # Open Auth JSON
+        f = open('restAuth.json')
+        self.auth = json.load(f)
+
         # Initializes variables.
         self.HOST = host
         self.PORT = port
-        #self.om = OrderManager()
+        self.om = OrderManager()
         self.running = False
 
     # Makes object callable.
@@ -53,7 +59,6 @@ class Server(socketserver.BaseRequestHandler):
         data = str(self.request.recv(1024), "utf-8").split('\n')
         header_end = data.index('\r')
         method = data[0]
-        header = data[1:header_end]
 
         # Handles the different HTTP requests.
         if 'PUT' in method:
@@ -63,13 +68,13 @@ class Server(socketserver.BaseRequestHandler):
             json_dict = json.loads(message[0])
 
             # Creates the command.
-            self.generate_command(header, json_dict)
+            self.generate_command(json_dict)
         else:
             self.response('503 Service Unavailable', 'This server is not normal.')
             self.stop()
 
     # Gets intent, descriptors, location and the object.
-    def generate_command(self, header, message):
+    def generate_command(self, message):
         # Log data in console.
         print("Recivied data from -", self.client_address)
 
@@ -127,7 +132,7 @@ class Server(socketserver.BaseRequestHandler):
         # Error checks.
         if len(wa_entities) == 0:
             # Inform client that there is no object.
-            self.response('409 Conflict', 'Could not determind object.')
+            self.response('409 Conflict', 'No object found.')
         else:
             # If there is an object or not.
             found = False
@@ -139,24 +144,55 @@ class Server(socketserver.BaseRequestHandler):
             
             # Ensures there is an object.
             if found:
-                # Inform the client that all is well.
-                self.response("200 OK")
+                # Sees if the object to be got is on the database.
+                if wa_intent[0] == "get":
+                    to_get = self.check_database(wa_entities, o_index)
+
+                    if len(to_get) == 1:
+                        # Adds the get order to the order stack.
+                        self.om.add_order(('get', to_get[0]))
+
+                        # Inform the client that all is well then get the item.
+                        self.response("200 OK")
+                    else:
+                        # Get alternatives
+
+                        # Send alternatives.
+                        self.response("409 Conflict",
+                        'Could not determind object.\r\n')
+
+                    return ('get', to_get)
+                else:
+                    return ('put')
             else:
                 # Inform client that there is no object.
-                self.response('409 Conflict', 'Could not determind object.')
+                self.response('409 Conflict', 'No object found.')
 
-        # TODO: Add a count to the posible inputs.
-        # Check against controller database. Use watson discovery.
-        # Ask for more specification if more then one item fits criteria.
-        # Which one? : list of items. [send all, display first couple, let user interact.]
-        # What kind? : list of types. [send all, display first couple, let user interact.]
-        # or inform them that the item was not found.
-        # Ensure the number asked for can be got.
+        return ('Failed.')
 
-        # Kills the server if a kill command was sent.
-        # DEV ONLY REMOVE IN PRODUCTION.
-        print(wa_intent, wa_entities)
-        return (wa_intent, wa_entities)
+    # Returns the database row or rows of the item or items that are requested.
+    def check_database(self, entites, index):
+        name = entites[index][1]
+        exact = self.om.database.get(name)
+        # Add number to get here too. Default is 1.
+
+        if exact != None:
+            return [(name, exact, 1)]
+        else:
+            # Authenticate discovery.
+            auth = self.auth['credentials'][2]
+            authenticator = IAMAuthenticator(auth['apikey'])
+            discovery = DiscoveryV2(
+                version='2019-11-22',
+                authenticator=authenticator
+            )
+
+            discovery.set_service_url(auth['serviceUrl'])
+
+            # Go to discovery and find related words.
+
+            # Return names of related objects.
+            return []
 
     # Sends the client a HTTP response.
     def response(self, code, message='All good.'):
@@ -173,7 +209,7 @@ class Server(socketserver.BaseRequestHandler):
     # Starts the server.
     def start(self):
         # Starts the order manager.
-        #self.om.start()
+        self.om.start()
 
         # Starts the server.
         self.running = True
@@ -188,4 +224,4 @@ class Server(socketserver.BaseRequestHandler):
 
             # Stops server and order manager.
             httpd.server_close()
-            #self.om.stop()
+            self.om.stop()

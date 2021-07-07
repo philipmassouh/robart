@@ -4,24 +4,24 @@ const { IamAuthenticator } = require('ibm-watson/auth');
 const AssistantV2 = require('ibm-watson/assistant/v2');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const https = require('http');
-
-const assistant_id = 'b5428c83-d98e-46e5-ad29-8db5cd50ea16';
+const auth = require('../../restAuth.json');
+const assistant_id = auth.credentials[1].assistantId;
 
 // Authenticats stt. Note: only last for 60mins.
 const speechToText = new SpeechToTextV1({
     authenticator: new IamAuthenticator({
-      apikey: 'R9hW3VQy4vgbFAHYoq9WWnzKoI5QioBVH9UAsWovlwVk',
+      apikey: auth.credentials[0].apikey,
     }),
-    serviceUrl: 'https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/1aafab97-84e5-4963-8fdc-8d078b522a15',
+    serviceUrl: auth.credentials[0].serviceUrl
 });
 
 // Authenticats wa. Note: only last for 60mins.
 const assistant = new AssistantV2({
     version: '2020-04-01',
     authenticator: new IamAuthenticator({
-        apikey: 'nK1ePaVkS-Vnd9vmVFFr7Y-Pcso0-whbsVPRLqX2e87r',
+        apikey: auth.credentials[1].apikey,
     }),
-    serviceUrl: 'https://api.us-south.assistant.watson.cloud.ibm.com/instances/7e0acc43-e72c-44b6-ae40-3ce992047bd2'
+    serviceUrl: auth.credentials[1].serviceUrl
 });
 
 //Sets up speech to text.
@@ -84,47 +84,40 @@ function watson_assistant(text, hostname) {
 
         // Makes the https request to update the robot.
         var req = https.request(options, res => {
-            console.log(res.statusCode);
-          
             res.on('data', d => {
-              process.stdout.write(d)
+                if (res.statusCode == '409') {
+                    if (d.includes('No object found.')) {
+                        process.stdout.write('NOF')
+                    }
+                    else if (d.includes('Could not determind object.')) {
+                        process.stdout.write('CDO')
+                    }
+                }
             });
         });
 
         // Error log.
-        req.on('error', error => {
-            console.error(error)
+        req.on('error', err => {
+            console.log(err)
         });
 
         // Write data.
         req.write(data);
         req.end();
     }).catch(err => {
-        // Recreates the session
+        // Creates the session
         assistant.createSession({
             assistantId: assistant_id
         })
-        .then(res => {
+        .then((res) => {
             assistant_session = res.result.session_id;
+            watson_assistant(text, hostname);
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
         });
-        
-        watson_assistant(text, hostname);
     });
 }
-
-//Creates session.
-assistant.createSession({
-    assistantId: assistant_id
-  })
-    .then(res => {
-      assistant_session = res.result.session_id;
-    })
-    .catch(err => {
-      console.log(err);
-    });
 
 // Allows program to only use some prebuilt functions.
 contextBridge.exposeInMainWorld(
@@ -151,7 +144,6 @@ contextBridge.exposeInMainWorld(
             watson_assistant(text, hostname);
         },
         restart_server: (hostname) => {
-            // Post options.
             fetch('http://' + hostname + ':8000')
         }
     }
