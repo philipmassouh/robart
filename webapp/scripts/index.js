@@ -1,3 +1,5 @@
+const auth = require('../../restAuth.json');
+
 var view = null,
   connectButton = null,
   listenButton = null
@@ -59,6 +61,9 @@ function init() {
   playerDiv = document.getElementById('playerDiv');
   overlay = document.getElementById('prompt');
   hostInput = document.getElementById('hostInput');
+
+  console.log(auth.server.ipv4)
+  hostInput.value = auth.server.ipv4
 }
 
 function show() {
@@ -99,12 +104,6 @@ function send() {
   window.watson.wa(textArea.value, hostname);
   textArea.value = "";
 }
-
-/**
- * Terminates the server.
- * WARNING DOING THIS WILL REQUIRE A SERVER RESTART BY HOST.
- */
-function restart_server() { window.watson.restart_server(hostname); }
 
 function listen() {
   audio.start();
