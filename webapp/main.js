@@ -5,8 +5,8 @@ function createWindow () {
     const win = new BrowserWindow({
         width: 800,
         height: 600,
-        title: "Robart Viewer",
-        icon: path.join(__dirname, "assets/main.ico"),
+        title: "ROBART",
+        icon: path.join(__dirname, "assets/robartIcon.png"),
         webPreferences: {
             preload: path.join(__dirname, "scripts/preload.js"),
             contextIsolation: true
