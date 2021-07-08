@@ -5,7 +5,7 @@ const AssistantV2 = require('ibm-watson/assistant/v2');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const https = require('http');
 const auth = require('../../restAuth.json');
-const chat = require('./chat.js');
+//const chat = require('./chat.js');
 const assistant_id = auth.assistant.assistantId;
 
 // Authenticats stt. Note: only last for 60mins.
@@ -39,6 +39,39 @@ var recognizeStream = speechToText.recognizeUsingWebSocket(params), assistant_se
 recognizeStream.on('data', function(event) { onEvent('data', event); });
 recognizeStream.on('error', function(event) { onEvent('Error:', event); });
 recognizeStream.on('close', function(event) { onEvent('Close:', event); });
+
+
+function watsonChat(message, item, numButtons) {
+    var chatbox = document.getElementById("chatbox");
+    var bubble = document.createElement("div");
+    bubble.classList.add("robart")
+    bubble.innerText = message
+
+    if (item.length > 1) {
+        var buttons = document.createElement("div");
+
+        for (i = 0; i < numButtons; i++) {
+            let button = document.createElement("input");
+            button.id = "TextToSend"
+            button.classList.add("btn")
+            //TODO one of these is redundant
+            button.innerText = item[i]
+            button.value = "Get" + item[i]
+            buttons.appendChild(button)
+        }
+
+        chatbox.appendChild(buttons)
+    }
+    chatbox.appendChild(bubble)
+}
+
+function userChat(msg) {
+    var chatbox = document.getElementById("chatbox");
+    var bubble = document.createElement("div");
+    bubble.classList.add("user")
+    bubble.innerText = msg
+    chatbox.appendChild(bubble)
+}
 
 // Display events on the console.
 function onEvent(name, event) {
@@ -88,15 +121,15 @@ function watson_assistant(text, hostname) {
             res.on('data', d => {
                 if (res.statusCode == '409') {
                     if (d.includes('No object found.')) {
-                        chat.watsonChat("Sorry I couldn't determind the item you were looking for, try rephrasing your statment.", [], -1)
+                        watsonChat("Sorry I couldn't determind the item you were looking for, try rephrasing your statment.", [], -1)
                     }
                     else if (d.includes('Could not determind object.')) {
                         text_d = new TextDecoder().decode(d)
                         options = text_d.split('\r\n')
-                        chat.watsonChat("Hmm, that search returned multiple results. Which is it?", options.slice(1, options.length - 1), 3)
+                        watsonChat("Hmm, that search returned multiple results. Which is it?", options.slice(1, options.length - 1), 3)
                     }
                 } else if (res.statusCode == '200') {
-                    chat.watsonChat(new TextDecoder().decode(d), [], 0)
+                    watsonChat(new TextDecoder().decode(d), [], 0)
                 }
             });
         });
@@ -146,6 +179,7 @@ contextBridge.exposeInMainWorld(
             }
         },
         wa: (text, hostname) => {
+            userChat(text)
             watson_assistant(text, hostname);
         },
         restart_server: (hostname) => {

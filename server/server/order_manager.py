@@ -1,7 +1,7 @@
 import threading
 import json
 import string 
-from server.controller.controllers import RobotController, WebotsController
+from server.controller.controllers import RobotController, WebotsRobot
 
 
 class OrderManager(threading.Thread):
@@ -15,7 +15,7 @@ class OrderManager(threading.Thread):
         self.orders = []
         self.orders_hist = []
         self.database = json.load(file)
-        self.controller = RobotController(WebotsController, "Robart")
+        self.controller = RobotController(WebotsRobot, "Robart")
 
     # Starts the order manager.
     def run(self):

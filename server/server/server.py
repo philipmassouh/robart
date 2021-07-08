@@ -156,7 +156,7 @@ class Server(socketserver.BaseRequestHandler):
                         self.om.add_order(('get', to_get[0]))
 
                         # Tells user what it is getting.
-                        res = "I am getting " + wa_entities[o_index][1] + "."
+                        res = "I am getting a " + wa_entities[o_index][1] + "."
 
                         # Inform the client that all is well then get the item.
                         self.response("200 OK", res)

@@ -44,46 +44,54 @@
         "cereal": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    1,
-                    3
-                ],
-                "sku": "000000000009"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        1,
+                        3
+                    ],
+                    "sku": "000000000009"
+                }
+            ]
         },
         "cracker": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    4,
-                    3
-                ],
-                "sku": "000000000008"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        4,
+                        3
+                    ],
+                    "sku": "000000000008"
+                }
+            ]
         },
         "cup": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    4,
-                    5
-                ],
-                "sku": "000000000000C"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        4,
+                        5
+                    ],
+                    "sku": "000000000000C"
+                }
+            ]
         },
         "duck": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    4,
-                    7
-                ],
-                "sku": "00000000000G"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        4,
+                        7
+                    ],
+                    "sku": "00000000000G"
+                }
+            ]
         },
         "extinguisher": {
             "count": 1,
@@ -101,13 +109,15 @@
         "flower": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    1,
-                    5
-                ],
-                "sku": "00000000000D"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        1,
+                        5
+                    ],
+                    "sku": "00000000000D"
+                }
+            ]
         },
         "gnome": {
             "count": 1,
@@ -125,24 +135,28 @@
         "honey": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    -2,
-                    3
-                ],
-                "sku": "000000000000A"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        3
+                    ],
+                    "sku": "000000000000A"
+                }
+            ]
         },
         "jam": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    -5,
-                    3
-                ],
-                "sku": "000000000000B"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        -5,
+                        3
+                    ],
+                    "sku": "000000000000B"
+                }
+            ]
         },
         "orange": {
             "count": 1,
@@ -173,24 +187,28 @@
         "trash": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    -5,
-                    5
-                ],
-                "sku": "00000000000F"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        -5,
+                        5
+                    ],
+                    "sku": "00000000000F"
+                }
+            ]
         },
         "tree": {
             "count": 1,
             "description": "",
-            "entities": {
-                "pos": [
-                    -2,
-                    5
-                ],
-                "sku": "00000000000E"
-            }
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        5
+                    ],
+                    "sku": "00000000000E"
+                }
+            ]
         },
         "water": {
             "count": 1,

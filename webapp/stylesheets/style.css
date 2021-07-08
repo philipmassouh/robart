@@ -118,7 +118,7 @@ html {
   flex-direction: column;
 }
 
-.chatbox {
+#chatbox {
   overflow: auto;
   /* background-color: #232624; */
   margin-right: 20px;
@@ -126,11 +126,11 @@ html {
   max-height: 50vh;
 }
 
-.chatbox:hover {
+#chatbox:hover {
   overflow: auto;
 }
 
-.chatbox>div {
+#chatbox>div {
   padding: 10px;
   margin: 15px;
   max-width: 50%;

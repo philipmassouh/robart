@@ -143,6 +143,3 @@ package-lock.json
 
 # Hides auth
 restAuth.json
-
-# Hides backup file.
-.warehouse.wbproj
