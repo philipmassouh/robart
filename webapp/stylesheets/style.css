@@ -51,7 +51,7 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #232624;
+  /* background: #232624; */
 }
 
 ::-webkit-scrollbar-thumb {
@@ -102,7 +102,12 @@ html {
   color: var(--secondary);
 }
 
-#TextToSend, #hostInput {
+#TextToSend {
+  background-color: var(--primary);
+  width: 100%;
+}
+
+#hostInput {
   background-color: var(--primary);
   margin: 20px 0px;
 }
@@ -114,9 +119,11 @@ html {
 }
 
 .chatbox {
-  height: 300px;
   overflow: auto;
-  background-color: #232624;
+  /* background-color: #232624; */
+  margin-right: 20px;
+  min-height: 50vh;
+  max-height: 50vh;
 }
 
 .chatbox:hover {
@@ -150,4 +157,10 @@ html {
   align-items: center;
   justify-content: center;
   /* background-color: #232624; */
+}
+
+#playerDiv {
+  display: flex;
+  flex-direction: column;
+  width: 50%
 }
