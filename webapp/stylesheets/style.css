@@ -1,60 +1,156 @@
+/* https://coolors.co/2c302e-474a48-909590-9ae19d-537a5a */
+@media screen and (prefers-color-scheme: light) {
+  :root {
+    --primary: #2C302E;
+    --secondary: #474A48;
+    --tertiary: #909590;
+    --green1: #537A5A;
+    --green2: #9AE19D;
+  }
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    --primary: #909590;
+    --secondary: #474A48;
+    --tertiary: #2C302E;
+    --green1: #9AE19D;
+    --green2: #537A5A;
+  }
+}
+
 html {
   font-family: "Arial", "Helvetica", "Verdana", "sans-serif";
-}
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow-y: hidden;
-  display: flex; 
-  flex-direction: row;
-  text-align: center;
+  background-color: var(--tertiary);
+  color: var(--green1);
+  box-sizing: border-box;
+  margin: 5px;
 }
 
-.right {
-  display: none;
-  width: 25%;
-  padding: 1rem;
-}
-
-.left {
-  width: 75%;
-  padding: 1rem;
-  display: flex;
-  flex-flow: column;
-}
-
-#playerDiv {
-  flex: 1;
-  margin: 1rem;
-  background-color: black;
-}
-
-/* Dropdown Button */
-.btn {
-  background-color: #f1f1f1;
-  padding: 0.5rem;
+.material-icons-sharp {
+  background-color: var(--green2); 
   border: none;
+  color: white;
+  padding: 0;
+  margin: 0;
+}
+
+.material-icons-sharp:hover {
+  background-color: var(--tertiary); 
+  transition-duration: 0.8s;
+  color: var(--secondary);
+}
+
+::-webkit-scrollbar {
+  background-color: var(--tertiary);
+  color: black;
+}
+
+ ::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #232624;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.header {
+  flex-direction: row;
+  display: flex;
+  margin-bottom: 50px;
+}
+
+.header>div>img {
+  width:300px;
 }
 
 #prompt {
-  background-color: #00000070;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: none;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 
-#prompt div {
-  background-color: #ffffff;
-  position: relative;
+.btn {
+  background-color:var(--green2); 
+  border: none;
+  color: white;
+  padding: 5px;
   text-align: center;
-  top: 50%;
-  left: 50%;
-  width: 25%;
-  transform: translate(-50%, -50%);
-  padding: 1rem;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background-color: var(--green1); 
+  transition-duration: 0.8s;
+  color: var(--secondary);
+}
+
+#TextToSend, #hostInput {
+  background-color: var(--primary);
+  margin: 20px 0px;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.chatbox {
+  width: 50%;
+  height: 300px;
+  overflow: auto;
+  /* background-color: #232624; */
+}
+
+.chatbox:hover {
+  overflow: auto;
+}
+
+.chatbox>div {
+  padding: 10px;
+  margin: 15px;
+  max-width: 50%;
+  display: inline-block;
+  clear: both;
+}
+
+.user {
+  background-color: var(--green2);
+  color: white;
+  float: right;
+}
+
+.robart {
+  background-color: var(--green1);
+  color: #474A48;
+  float: left;
+}
+
+#inputBar {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /* background-color: #232624; */
+  width: 50%;
+}
+
+#inputBar>input {
+
+}
+
+#playerDiv {
+  height: 50%;
 }
