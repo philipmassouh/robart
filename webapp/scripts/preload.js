@@ -5,6 +5,7 @@ const AssistantV2 = require('ibm-watson/assistant/v2');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const https = require('http');
 const auth = require('../../restAuth.json');
+const chat = require('./chat.js');
 const assistant_id = auth.assistant.assistantId;
 
 // Authenticats stt. Note: only last for 60mins.
@@ -87,16 +88,15 @@ function watson_assistant(text, hostname) {
             res.on('data', d => {
                 if (res.statusCode == '409') {
                     if (d.includes('No object found.')) {
-                        console.log("Sorry I couldn't determind the item you were looking for, try rephrasing your statment.")
+                        chat.watsonChat("Sorry I couldn't determind the item you were looking for, try rephrasing your statment.", [], -1)
                     }
                     else if (d.includes('Could not determind object.')) {
                         text_d = new TextDecoder().decode(d)
                         options = text_d.split('\r\n')
-                        //some_func(options.slice(1, options.length - 1))
+                        chat.watsonChat("Hmm, that search returned multiple results. Which is it?", options.slice(1, options.length - 1), 3)
                     }
                 } else if (res.statusCode == '200') {
-                    //some_func(new TextDecoder().decode(d))
-                    //I am getting this. or I am placing this.
+                    chat.watsonChat(new TextDecoder().decode(d), [], 0)
                 }
             });
         });

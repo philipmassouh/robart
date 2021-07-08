@@ -57,20 +57,25 @@ class Server(socketserver.BaseRequestHandler):
 
     # Handles HTTP requests.
     def handle(self):
-        data = str(self.request.recv(1024), "utf-8").split('\n')
-        header_end = data.index('\r')
-        method = data[0]
+        try:
+            data = str(self.request.recv(1024), "utf-8").split('\n')
 
-        # Handles the different HTTP requests.
-        if 'PUT' in method:
-            message = data[header_end + 1:len(data)]
+            header_end = data.index('\r')
+            method = data[0]
 
-            # Gets the message as json.
-            json_dict = json.loads(message[0])
+            # Handles the different HTTP requests.
+            if 'PUT' in method:
+                message = data[header_end + 1:len(data)]
 
-            # Creates the command.
-            self.generate_command(json_dict)
-        else:
+                # Gets the message as json.
+                json_dict = json.loads(message[0])
+
+                # Creates the command.
+                self.generate_command(json_dict)
+            else:
+                self.response('503 Service Unavailable', 'This server is not normal.')
+                self.stop()
+        except UnicodeDecodeError:
             self.response('503 Service Unavailable', 'This server is not normal.')
             self.stop()
 
@@ -166,7 +171,7 @@ class Server(socketserver.BaseRequestHandler):
                         'put', 
                         (wa_entities[o_index][1], {'pos': [0.0, 0.0], 'sku': '000000000000'}, 1)
                     ))
-                    res = "I am placing " + wa_entities[o_index][1] + "."
+                    res = "I am placing " + wa_entities[o_index][1] + " away."
 
 
                     # Inform the client that all is well then put the item.
@@ -200,7 +205,7 @@ class Server(socketserver.BaseRequestHandler):
             # Go to discovery and find related words.
 
             # Return names of related objects.
-            return ['Cube', 'Soda', 'Water', 'Fire hydrant']
+            return ['Apple', 'Bottle', 'Can', 'Extinguisher', 'Gnome', 'Orange', 'Paint', 'Water']
 
     # Sends the client a HTTP response.
     def response(self, code, message='All good.'):

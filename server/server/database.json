@@ -18,7 +18,7 @@
         "bottle": {
             "count": 1,
             "description": "A glass bottle is a bottle made from glass. Glass bottles can vary in size considerably, but are most commonly found in sizes ranging between about 200 millilitres and 1.5 litres. Common uses for glass bottles include food condiments, soda, liquor, cosmetics, pickling and preservatives.",
-            "entities":[
+            "entities": [
                 {
                     "pos": [
                         4,
@@ -41,9 +41,35 @@
                 }
             ]
         },
+        "extinguisher": {
+            "count": 1,
+            "description": "A portable device that discharges a jet of water, foam, gas, or other material to extinguish a fire. A fire extinguisher is an active fire protection device used to extinguish or control small fires, often in emergency situations. It is not intended for use on an out-of-control fire, such as one which has reached the ceiling, endangers the user, or otherwise requires the expertise of a fire brigade.",
+            "entities": [
+                {
+                    "pos": [
+                        1,
+                        1
+                    ],
+                    "sku": "000000000005"
+                }
+            ]
+        },
+        "gnome": {
+            "count": 1,
+            "description": "A small garden ornament in the form of a bearded man with a pointed hat.",
+            "entities": [
+                {
+                    "pos": [
+                        -5,
+                        1
+                    ],
+                    "sku": "000000000007"
+                }
+            ]
+        },
         "orange": {
             "count": 1,
-            "description":"A round juicy citrus fruit with a tough bright reddish-yellow rind.",
+            "description": "A round juicy citrus fruit with a tough bright reddish-yellow rind.",
             "entities": [
                 {
                     "pos": [
@@ -51,6 +77,19 @@
                         -1
                     ],
                     "sku": "000000000003"
+                }
+            ]
+        },
+        "paint": {
+            "count": 1,
+            "description": "A large steel or aluminum container in which paint is sealed for storage over long periods.",
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        1
+                    ],
+                    "sku": "000000000006"
                 }
             ]
         },
@@ -64,45 +103,6 @@
                         -1
                     ],
                     "sku": "000000000004"
-                }
-            ]
-        },
-        "extinguisher": {
-            "count": 1,
-            "description":"A portable device that discharges a jet of water, foam, gas, or other material to extinguish a fire. A fire extinguisher is an active fire protection device used to extinguish or control small fires, often in emergency situations. It is not intended for use on an out-of-control fire, such as one which has reached the ceiling, endangers the user, or otherwise requires the expertise of a fire brigade.",
-            "entities": [
-                {
-                    "pos": [
-                        1,
-                        1
-                    ],
-                    "sku":"000000000005"
-                }
-            ]
-        },
-        "paint": {
-            "count": 1,
-            "description":"A large steel or aluminum container in which paint is sealed for storage over long periods.",
-            "entities":[
-                {
-                    "pos":[
-                        -2,
-                        1
-                    ],
-                    "sku":"000000000006"
-                }
-            ]
-        },
-        "gnome": {
-            "count":1,
-            "description":"A small garden ornament in the form of a bearded man with a pointed hat.",
-            "entities":[
-                {
-                    "pos":[
-                        -5,
-                        1
-                    ],
-                    "sku":"000000000007"
                 }
             ]
         }
