@@ -154,6 +154,7 @@ contextBridge.exposeInMainWorld(
                 }
 
                 // Makes the https request to update the robot.
+                //function watsonChat(message, item, numButtons) {
                 var req = https.request(options, res => {
                     console.log("Here " + res);
                     console.log(res.statusCode);

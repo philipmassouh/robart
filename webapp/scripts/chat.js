@@ -1,18 +1,20 @@
-function watsonChat(string, numButtons) {
+function watsonChat(message, item, numButtons) {
     let chatbox = document.getElementByClass("chatbox");
     let bubble = document.createElement("div");
     bubble.classList.add("robart")
-    bubble.textContent(string)
-    if (numButtons > 0) {
+    bubble.textContent(string[0])
+    if (numButtons > 1) {
         let options = string.split(",");
         let buttons = document.createElement("div");
         for (i = 0; i < numBubbles; i++) {
-            let button = document.createElement("");
+            let button = document.createElement("input");
+            button.classList.add("btn")
         }
         chatbox.append(buttons)
     }
     chatbox.append(bubble)
 }
+
 
 
 
