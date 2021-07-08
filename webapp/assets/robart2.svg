@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="607.67896"
+   height="195.73347"
+   viewBox="0 0 160.78178 51.787815"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="robart2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="false"
+     inkscape:document-units="mm"
+     showgrid="true"
+     width="400px"
+     units="px"
+     showguides="true"
+     showborder="true"
+     inkscape:showpageshadow="true"
+     inkscape:lockguides="false"
+     inkscape:snap-global="false"
+     inkscape:zoom="1.4037018"
+     inkscape:cx="197.69156"
+     inkscape:cy="202.32217"
+     inkscape:window-width="2560"
+     inkscape:window-height="1053"
+     inkscape:window-x="0"
+     inkscape:window-y="740"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid67"
+       units="px"
+       snapvisiblegridlinesonly="true"
+       dotted="false"
+       visible="true"
+       enabled="true"
+       originx="-0.54747653"
+       originy="-0.56783276" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <rect
+       x="693.9079"
+       y="403.51617"
+       width="192.59483"
+       height="54.31308"
+       id="rect16403" />
+    <rect
+       x="688.70087"
+       y="383.46243"
+       width="76.810295"
+       height="59.492634"
+       id="rect11037" />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath38211">
+      <path
+         id="path38213"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.264583"
+         d="m 168.07191,102.48263 v 8.24653 h 6.00945 c -0.0785,-0.0159 -0.15614,-0.0348 -0.23203,-0.0579 -0.0246,-0.002 -0.0496,-0.005 -0.076,-0.008 -0.0911,-0.01 -0.18122,-0.0269 -0.27182,-0.0403 -0.11579,-0.0632 -0.29016,-0.0708 -0.34726,-0.18965 -0.0398,-0.0826 -0.0651,-0.17087 -0.0806,-0.262 -0.0977,-0.10914 -0.16228,-0.21515 -0.2005,-0.43202 -0.0839,-0.47597 0.11067,-0.94981 0.45216,-1.27796 0.0408,-0.068 0.0887,-0.13303 0.14367,-0.19327 0.10633,-0.11661 0.24096,-0.20802 0.38085,-0.28112 0.28469,-0.14868 0.50082,-0.15659 0.79427,-0.18603 0.0736,-0.0426 0.15475,-0.076 0.24391,-0.0971 0.0825,-0.0196 0.15942,-0.0287 0.23306,-0.0289 0.26301,-7.9e-4 0.47871,0.11087 0.71107,0.25683 0.0924,0.0581 0.17175,0.13539 0.25735,0.20309 0.1569,0.16339 0.23312,0.22259 0.34623,0.41961 0.0432,0.0753 0.0838,0.1538 0.108,0.2372 0.0588,0.2027 0.0756,0.4226 0.0108,0.62735 -0.01,0.0313 -0.0217,0.0615 -0.0351,0.0915 0,0 0,5.3e-4 0,5.3e-4 -0.004,0.0708 -0.0136,0.14523 -0.0346,0.24649 -0.017,0.0817 -0.0308,0.16731 -0.0703,0.24082 -0.0682,0.12684 -0.1478,0.25056 -0.24908,0.35294 -0.23584,0.23843 -0.40844,0.2526 -0.71624,0.35296 -0.0283,0.003 -0.057,0.007 -0.0853,0.0103 -0.0196,0.005 -0.039,0.01 -0.0584,0.0145 h 6.50968 v -8.24652 z" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath38343">
+      <path
+         id="path38345"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.264583"
+         d="m 175.1924,106.95368 v 12.3734 h 6.87917 v -6.92309 c -0.0724,0.0601 -0.15271,0.10767 -0.24236,0.12247 -0.14362,0.0237 -0.27435,-0.0981 -0.41135,-0.14728 -0.0485,-0.12668 -0.11781,-0.24749 -0.14521,-0.38034 -0.0174,-0.0845 0.01,-0.17218 0.0139,-0.25838 0.006,-0.1291 0.012,-0.25788 0.016,-0.38705 0.002,-0.0718 0.004,-0.14371 0.006,-0.21549 -0.003,-0.008 -0.005,-0.0156 -0.008,-0.0238 h 5.3e-4 c -0.0856,-0.26323 -0.0668,-0.47867 0.008,-0.62425 -0.009,-0.26569 -0.006,-0.53157 -0.004,-0.79737 0.0854,-0.13269 0.0988,-0.38891 0.25632,-0.39791 0.0341,-0.002 0.0666,-0.003 0.0971,-0.003 0.19881,0.001 0.32628,0.0468 0.41289,0.12247 v -2.46083 z" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline"
+     transform="translate(-0.54747634,-0.56783276)">
+    <path
+       style="display:inline;fill:#537a5a;fill-opacity:1;stroke:#537a5a;stroke-width:0.813452px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 0.95420234,14.936826 21.290541,27.138616 V 51.542199 L 0.95420234,39.340408 Z"
+       id="path2001" />
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text11035"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect11037);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="688.70117"
+         y="478.3457"
+         id="tspan2072"><tspan
+           dx="0 25.996094 24.472656 25.390625 24.511719 16.445312"
+           id="tspan2070">Robart</tspan></tspan></text>
+    <path
+       style="display:inline;fill:#537a5a;fill-opacity:1;stroke:#537a5a;stroke-width:0.813452px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 43.569746,14.852681 23.233407,27.054471 V 51.458054 L 43.569746,39.256263 Z"
+       id="path2001-3" />
+    <path
+       style="fill:#537a5a;fill-opacity:1;stroke:#537a5a;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1.3229165,13.229166 22.30582,0.56783276 43.397752,13.229656 22.272499,25.95812 Z"
+       id="path472" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.8134527,0,-0.09533695,0.8134527,-512.83262,-318.58995)"
+       id="text16401"
+       style="font-style:normal;font-weight:normal;font-size:39.1326px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect16403);display:inline;fill:#9ae19d;fill-opacity:1;stroke:#537a5a;stroke-width:1.37953;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;image-rendering:auto"><tspan
+         x="693.9082"
+         y="438.1388"
+         id="tspan2076"><tspan
+           style="font-style:italic;font-weight:bold;-inkscape-font-specification:'sans-serif Bold Italic';paint-order:markers fill stroke"
+           id="tspan2074">ROBART</tspan></tspan></text>
+  </g>
+</svg>

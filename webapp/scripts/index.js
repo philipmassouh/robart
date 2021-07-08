@@ -74,7 +74,7 @@ function connect() {
   // For any other use, please refer to the documentation:
   // https://www.cyberbotics.com/doc/guide/web-simulation#how-to-embed-a-web-scene-in-your-website
   hostname = hostInput.value;
-  hide();
+  //hide();
 
   if (hostname && hostname !='') {
     view = new webots.View(playerDiv, mobileDevice);

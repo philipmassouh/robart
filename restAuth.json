@@ -1,0 +1,15 @@
+{
+    "credentials": [
+        {
+            "service":"speechToText",
+            "apikey":"R9hW3VQy4vgbFAHYoq9WWnzKoI5QioBVH9UAsWovlwVk",
+            "serviceUrl":"https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/1aafab97-84e5-4963-8fdc-8d078b522a15"
+        },
+
+        {
+            "service":"assistant",
+            "apikey":"nK1ePaVkS-Vnd9vmVFFr7Y-Pcso0-whbsVPRLqX2e87r",
+            "serviceUrl":"https://api.us-south.assistant.watson.cloud.ibm.com/instances/7e0acc43-e72c-44b6-ae40-3ce992047bd2"
+        }
+    ]
+}

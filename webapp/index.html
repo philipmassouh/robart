@@ -7,38 +7,62 @@
     <link rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' />
     <link type='text/css' rel='stylesheet' href='./wwi/wwi.css' />
     <link type='text/css' rel='stylesheet' href='./stylesheets/style.css' />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
   </head>
 
+
   <body>
-    <div id="prompt">
-      <div>
-        <label>Host:</label>
-        <input class="btn" id="hostInput" type="password" value="localhost"/>
-        <input class="btn" type='button' value='Confirm' onclick='connect()'/>
-        <input class="btn" type='button' value='Cancel' onclick='hide()'/>
+    <!-- HEADER -->
+    <div class="header">
+      <!-- TODO: figure out why svg isnt working -->
+      <div> <img src="assets/robart.png"> </img> </div>
+      <div id="prompt">
+        <div>
+          <input class="btn" id="hostInput" type="password" value="localhost"/>
+          <input class="btn" type='button' value='Confirm' onclick='connect()'/>
+          <input class="btn" type='button' value='Cancel' onclick='hide()'/>
+        </div>
       </div>
     </div>
-    <div class='left'>
-      <header>
-        <h2>Options</h2>
-        <input id='ConnectButton' class="btn" type='button' value='Connect' onclick='show()'/>
-        <input id='ListenButton' class="btn" type='button' value='Listen' onclick='listen()' />
-        <input id='TextToSend' class="btn" type='text'/>
-        <input id='SendButton' class="btn" type='button' value='Send' onclick='send()' />
-        <input id='Terminate' class="btn" type='button' value='Kill Server' onclick='restart_server()'/>
-      </header>
+
+
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="chatbox">
+ 
+        </div>
+      </div>
+
+      <div id='inputBar'>
+        <input id='ListenButton' type='button' onclick='listen()'
+                class="material-icons-sharp" value='mic' 
+                style="height: 28px; position: relative;"/>
+        <input id='TextToSend' class="btn" type='text'
+                style="width: 65%"/>
+        <input id='SendButton' type='button' onclick='send()' 
+                class="material-icons-sharp" value='keyboard_return' 
+                style="height: 28px; width: 50px; position: relative; margin-right: 35px;"/>
+      </div>
+
       <div id='playerDiv'></div>
+      <script src='https://code.jquery.com/jquery-3.1.1.min.js' 
+      integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=' crossorigin='anonymous'></script>
+      <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js' 
+      integrity='sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=' crossorigin='anonymous'></script>
+      <script src='https://cyberbotics.com/jquery-dialogextend/2.0.4/jquery.dialogextend.min.js'></script>
+      <script src='https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js'></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=MML_HTMLorMML'></script>
+      <script src='./wwi/webots.min.js'></script>
+      <script src='./scripts/index.js'></script>
+
     </div>
-    <div class='right'>
-      <h2>History</h2>
-    </div>
-    <script src='https://code.jquery.com/jquery-3.1.1.min.js' integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=' crossorigin='anonymous'></script>
-    <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js' integrity='sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=' crossorigin='anonymous'></script>
-    <script src='https://cyberbotics.com/jquery-dialogextend/2.0.4/jquery.dialogextend.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=MML_HTMLorMML'></script>
-    <script src='./wwi/webots.min.js'></script>
-    <script src='./scripts/index.js'></script>
+
+    <!-- FOOTER -->
+    <div class="FOOTER">   </div>
+
+
+
   </body>
 
 </html>
