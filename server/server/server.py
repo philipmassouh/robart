@@ -20,7 +20,7 @@ class Server(socketserver.BaseRequestHandler):
         if not started:
             # Webots location and world.
             webots = os.environ.get('WEBOTS_HOME') + "/msys64/mingw64/bin/webotsw.exe"
-            world = os.getcwd() + "./assets/warehouse.wbt"
+            world = os.getcwd() + "./assets/worlds/warehouse.wbt"
 
             # Opens webots.
             subprocess.Popen([webots, "--stream", world])
