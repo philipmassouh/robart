@@ -61,7 +61,7 @@ class OrderManager(threading.Thread):
                             self.database['objects'][name]['entities'] = []
 
                         # Go to place it.
-                        self.controller.return_item(True)
+                        self.controller.return_item()
                         #self.controller.goto_coords(coords)
 
                         # Add the item to the database.
