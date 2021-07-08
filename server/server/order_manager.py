@@ -1,18 +1,23 @@
 import threading
+import json
+import string 
 from server.controller.controllers import RobotController, WebotsController
 
 
 class OrderManager(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
+        
+        # Opens database.
+        file = open('./server/server/database.json')
+
         self.running = True
         self.orders = []
         self.orders_hist = []
-        self.database = {
-            'cube': [[], [(0.0, 0.0), (0.0, 1.0)], 2, ['KIJUEBVUA872', 'Y34IGTYWF13I']]
-        }
+        self.database = json.load(file)
         self.controller = RobotController(WebotsController, "Robart")
 
+    # Starts the order manager.
     def run(self):
         while self.running:
             # Gets the oldest order.
@@ -21,42 +26,86 @@ class OrderManager(threading.Thread):
                 operation = order[0]
                 data = order[1]
 
-                print(order)
-                print(data)
-
                 # Tests if the op is get or put.
                 if operation == 'get':
                     for _ in range(data[2]):
-                        # Remove item from row.
-                        coords = data[1][1].pop(len(data[1][1]) - 1)
-                        data[1][2] = data[1][2] - 1
-                        sku = data[1][3].pop(len(data[1][3]) - 1)
+                        last = self.database['objects'][data[0]]['count'] - 1
 
-                        # Gets the item requested.
-                        #self.controller.goto_coords(coords[0], coords[1])
+                        if last > -1:
+                            # Remove item from row.
+                            coords = self.database['objects'][data[0]]['entities'][last]['pos']
 
-                        # Updates the database.
-                        self.database[data[0]] = data[1]
+                            # Gets the item requested.
+                            #self.controller.goto_coords(coords[0], coords[1])
+
+                            # Update count object and free space.
+                            self.database['objects'][data[0]]['count'] = last
+                            self.database['objects'][data[0]]['entities'].pop(last)
+                            self.database['freeSpace'].append(coords)
+                            self.database['table'].append(data[0])
                 else:
                     for _ in range(data[2]):
-                        # Put the item back where they go.
-                        coords = data[1][1][len(data[1][1]) - 1]
+                        # Where the item needs to be placed.
+                        coords = self.database['freeSpace'].pop(0)
+                        data[1]['pos'] = coords
+                        name = data[0]
+                        data[1]['sku'] = self.int_to_sku(self.database['nextSKU'])
+
+                        if data[0] in ['that', 'this', 'it']:
+                            name = self.database['table'].pop(0)
+
+                        # Check if it is there.
+                        if self.database['objects'][name].get('count') == None:
+                            self.database['objects'][name]['count'] = 0
+                            self.database['objects'][name]['description'] = ''
+                            self.database['objects'][name]['entities'] = []
+
+                        # Go to place it.
                         #self.controller.goto_coords(coords[0], coords[1])
 
-
                         # Add the item to the database.
-                        self.database[data[0]][1].append(data[1][1])
-                        self.database[data[0]][1] += data[1][2]
-                        self.database[data[0]][1].append(data[1][3])
+                        self.database['objects'][name]['count'] += 1
+                        self.database['objects'][name]['entities'].append(data[1])
+                        self.database['nextSKU'] += 1
 
                 # Adds order to history.
                 self.orders_hist.append(order)
 
+    # Takes the number stored in the database and turns it into a sku.
+    def int_to_sku(self, number):
+        r = ''
+        while number > 0: 
+            r = string.printable[number % 36] + r 
+            number //= 36
+
+        if len(r) < 12:
+            # Format string.
+            a = ''
+            for _ in range(12 - len(r)):
+                a += '0'
+
+            r = a + r
+            return r
+        elif len(r) > 12:
+            # Starts from 0 again if it overflows.
+            self.database['nextSKU'] = 0
+            return self.int_to_sku(0)
+        else:
+            return r
+
+    # Adds an item to order.
     def add_order(self, order):
         self.orders.append(order)
 
+    # Gets all old orders.
     def get_order_hist(self):
         return self.orders_hist
 
+    # Stops the order manager and saves the DB.
     def stop(self):
+        # Saves the changes to the database.
+        file = open('./server/server/database.json', 'w')
+        file.write(json.dumps(self.database, indent=4, sort_keys=True))
+        file.close()
+
         self.running = False

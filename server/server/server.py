@@ -42,6 +42,7 @@ class Server(socketserver.BaseRequestHandler):
         # Open Auth JSON
         f = open('restAuth.json')
         self.auth = json.load(f)
+        f.close()
 
         # Initializes variables.
         self.HOST = host
@@ -75,9 +76,6 @@ class Server(socketserver.BaseRequestHandler):
 
     # Gets intent, descriptors, location and the object.
     def generate_command(self, message):
-        # Log data in console.
-        print("Recivied data from -", self.client_address)
-
         # List of intents and list of entites.
         intents = message['output']['intents']
         entites = message['output']['entities']
@@ -115,7 +113,7 @@ class Server(socketserver.BaseRequestHandler):
 
             # Creats an List of tuples that hold the command.
             if index == -1:
-                if entity_con > 0.50:
+                if entity_con > 0.50 or o_index == -1:
                     # Ensures one object and one location.
                     if (entity_nam == 'object' or entity_nam == 'SKU') and o_index != -1:
                         if entity_con > wa_entities[o_index][2]:
@@ -152,35 +150,45 @@ class Server(socketserver.BaseRequestHandler):
                         # Adds the get order to the order stack.
                         self.om.add_order(('get', to_get[0]))
 
+                        # Tells user what it is getting.
+                        res = "I am getting " + wa_entities[o_index][1] + "."
+
                         # Inform the client that all is well then get the item.
-                        self.response("200 OK")
+                        self.response("200 OK", res)
                     else:
-                        # Get alternatives
+                        # The message to send.
+                        res = 'Could not determind object.\r\n' + '\r\n'.join(to_get)
 
                         # Send alternatives.
-                        self.response("409 Conflict",
-                        'Could not determind object.\r\n')
-
-                    return ('get', to_get)
+                        self.response("409 Conflict", res)
                 else:
-                    return ('put')
+                    self.om.add_order((
+                        'put', 
+                        (wa_entities[o_index][1], {'pos': [0.0, 0.0], 'sku': '000000000000'}, 1)
+                    ))
+                    res = "I am placing " + wa_entities[o_index][1] + "."
+
+
+                    # Inform the client that all is well then put the item.
+                    self.response("200 OK", res)
+
+                # Log data in console.
+                print("Recivied data from -", self.client_address, "Command generic:",
+                    wa_intent[0], "-", wa_entities[o_index][1])
             else:
                 # Inform client that there is no object.
                 self.response('409 Conflict', 'No object found.')
 
-        return ('Failed.')
-
     # Returns the database row or rows of the item or items that are requested.
     def check_database(self, entites, index):
         name = entites[index][1]
-        exact = self.om.database.get(name)
-        # Add number to get here too. Default is 1.
+        exact = self.om.database['objects'].get(name)
 
         if exact != None:
             return [(name, exact, 1)]
         else:
             # Authenticate discovery.
-            auth = self.auth['credentials'][2]
+            auth = self.auth['discovery']
             authenticator = IAMAuthenticator(auth['apikey'])
             discovery = DiscoveryV2(
                 version='2019-11-22',
@@ -192,7 +200,7 @@ class Server(socketserver.BaseRequestHandler):
             # Go to discovery and find related words.
 
             # Return names of related objects.
-            return []
+            return ['Cube', 'Soda', 'Water', 'Fire hydrant']
 
     # Sends the client a HTTP response.
     def response(self, code, message='All good.'):
