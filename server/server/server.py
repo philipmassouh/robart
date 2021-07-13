@@ -2,9 +2,10 @@ import os
 import json
 import subprocess
 import socketserver
-from ibm_watson import DiscoveryV2
+# from ibm_watson import DiscoveryV2
 from server.server.order_manager import OrderManager
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+# from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
 
 class Server(socketserver.BaseRequestHandler):
     # Server constructor.
@@ -117,7 +118,7 @@ class Server(socketserver.BaseRequestHandler):
                     o_index = i
                 elif wa_entity[0] == 'location':
                     l_index = i
-                
+  
                 # Finds current value in all entities.
                 if entity_val == wa_entity[1]:
                     index = i
@@ -140,21 +141,22 @@ class Server(socketserver.BaseRequestHandler):
 
         # Checks for errors.
         self.error_check(wa_intent, wa_entities, o_index)
-        
+
     # Checks for errors.
     def error_check(self, wa_intent, wa_entities, o_index):
         if len(wa_entities) == 0:
             # Inform client that there is no object.
             self.response('409 Conflict', 'No object found.')
         else:
-            found = False # If there is an object or not.
-            
+            # If there is an object or not.
+            found = False
+
             # Checks if there is at least an object in the list.
             for wa_entity in wa_entities:
                 if wa_entity[0] == 'object' or wa_entity[0] == 'SKU':
                     found = True
                     break
-            
+
             # Ensures there is an object.
             if found:
                 # Sees if the object to be got is on the database.
@@ -175,17 +177,17 @@ class Server(socketserver.BaseRequestHandler):
                 else:
                     # Sends put order.
                     self.om.add_order((
-                        'put', 
+                        'put',
                         (wa_entities[o_index][1], {'pos': [0.0, 0.0], 'sku': '000000000000'}, 1)
                     ))
-                    
+
                     # Inform the client that all is well then put the item.
                     res = "I am placing " + wa_entities[o_index][1] + " away."
                     self.response("200 OK", res)
 
                 # Log data in console.
                 print("Recivied data from -", self.client_address, "Command generic:",
-                    wa_intent[0], "-", wa_entities[o_index][1])
+                wa_intent[0], "-", wa_entities[o_index][1])
             else:
                 # Inform client that there is no object.
                 self.response('409 Conflict', 'No object found.')
@@ -197,7 +199,7 @@ class Server(socketserver.BaseRequestHandler):
 
         print(exact)
 
-        if exact != None:
+        if exact is not None:
             return [(name, exact, 1)]
         else:
             # Authenticate discovery.

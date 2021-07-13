@@ -1,13 +1,13 @@
 import threading
 import json
-import string 
+import string
 from server.controller.controllers import RobotController, WebotsRobot
 
 
 class OrderManager(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        
+    
         # Opens database.
         file = open('./server/server/database.json')
 
@@ -55,7 +55,7 @@ class OrderManager(threading.Thread):
                             name = self.database['table'].pop(0)
 
                         # Check if it is there.
-                        if self.database['objects'][name].get('count') == None:
+                        if self.database['objects'][name].get('count') is None:
                             self.database['objects'][name]['count'] = 0
                             self.database['objects'][name]['description'] = ''
                             self.database['objects'][name]['entities'] = []
@@ -74,8 +74,8 @@ class OrderManager(threading.Thread):
     # Takes the number stored in the database and turns it into a sku.
     def int_to_sku(self, number):
         r = ''
-        while number > 0: 
-            r = string.printable[number % 36] + r 
+        while number > 0:
+            r = string.printable[number % 36] + r
             number //= 36
 
         if len(r) < 12:
