@@ -105,6 +105,7 @@ html {
 #TextToSend {
   background-color: var(--primary);
   width: 100%;
+  text-align: left;
 }
 
 #hostInput {
@@ -118,16 +119,15 @@ html {
   flex-direction: column;
 }
 
-#chatbox {
-  overflow: auto;
-  /* background-color: #232624; */
-  margin-right: 20px;
-  min-height: 50vh;
-  max-height: 50vh;
+#chat {
+  width: 50%;
+  height: 80vh;
 }
 
-#chatbox:hover {
-  overflow: auto;
+#chatbox {
+  overflow: scroll;
+  margin-right: 20px;
+  height: 60vh;
 }
 
 #chatbox>div {
@@ -156,11 +156,11 @@ html {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  /* background-color: #232624; */
 }
 
 #playerDiv {
   display: flex;
   flex-direction: column;
-  width: 50%
+  height: 80vh;
+  width: 50%;
 }

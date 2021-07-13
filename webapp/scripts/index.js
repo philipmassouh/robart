@@ -1,5 +1,3 @@
-const auth = require('../../restAuth.json');
-
 var view = null,
   connectButton = null,
   listenButton = null
@@ -8,9 +6,9 @@ var view = null,
   audio = null,
   audioChunks = [],
   playerDiv = null,
-  hostname = null;
+  hostname = null,
+  mobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-var mobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 if (mobileDevice) {
   let head = document.getElementsByTagName('head')[0];
   let jqueryTouch = document.createElement('script');
@@ -53,6 +51,21 @@ function init() {
       alert('Error capturing audio. ' + error);
     });
 
+    // Sets up authentication.
+    fetch("../restAuth.json")
+    .then(response => {
+      response.json()
+      .then(auth => {
+        // Sets the host input to a default IP.
+        if(auth.server.local == 'Null') {
+          hostInput.value = auth.server.ipv4
+        } else {
+          hostInput.value = auth.server.local
+        }
+      });
+    }).catch(e => {
+      console.log(e)
+    });
   } else { alert('getUserMedia not supported in this browser.'); }
 
   connectButton = document.getElementById('ConnectButton');
@@ -61,25 +74,13 @@ function init() {
   playerDiv = document.getElementById('playerDiv');
   overlay = document.getElementById('prompt');
   hostInput = document.getElementById('hostInput');
-
-  console.log(auth.server.ipv4)
-  hostInput.value = auth.server.ipv4
 }
 
-function show() {
-  overlay.style.display = "block";
-}
-
-function hide() {
-  overlay.style.display = "none";
-}
-
+/**
+ * Connects to Webots and the server.
+ */
 function connect() {
-  // This `streaming viewer` setups a broadcast streaming where the simulation is shown but it is not possible to control it.
-  // For any other use, please refer to the documentation:
-  // https://www.cyberbotics.com/doc/guide/web-simulation#how-to-embed-a-web-scene-in-your-website
   hostname = hostInput.value;
-  //hide();
 
   if (hostname && hostname !='') {
     view = new webots.View(playerDiv, mobileDevice);
@@ -92,30 +93,44 @@ function connect() {
   }
 }
 
+/**
+ * Disconnects from Webots and the server.
+ */
 function disconnect() {
   view.close();
   view = null;
   playerDiv.innerHTML = null;
   connectButton.value = 'Connect';
   connectButton.onclick = show;
+  hostname = '';
 }
 
+/**
+ * Sends the text to Watson.
+ */
 function send() {
   window.watson.wa(textArea.value, hostname);
   textArea.value = "";
 }
 
-function listen() {
+/**
+ * Starts listening.
+ */
+function start_listening() {
   audio.start();
   window.watson.stt();
   listenButton.value = 'Stop';
-  listenButton.onclick = stop;
+  listenButton.onclick = stop_listening;
 }
 
-function stop() {
+/**
+ * Stops listening.
+ */
+function stop_listening() {
   audio.stop();
   listenButton.value = 'Listen';
-  listenButton.onclick = listen;
+  listenButton.onclick = start_listening;
 }
 
+// Launches mic on window load.
 window.addEventListener('load', init, false);

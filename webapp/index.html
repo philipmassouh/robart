@@ -20,7 +20,6 @@
         <div>
           <input class="btn" id="hostInput" type="password" value="localhost"/>
           <input class="btn" type='button' value='Confirm' onclick='connect()'/>
-          <!-- <input class="btn" type='button' value='Cancel' onclick='hide()'/> -->
         </div>
       </div>
     </div>
@@ -30,79 +29,16 @@
     <!-- MAIN -->
     <div id="main">
 
-      <div>
+      <div id="chat">
         <div id="chatbox">
           <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
             You can give me a command using your microphone or by typing in the chat
             below! 
           </div>
-          <!-- <div class="user"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="user"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="user"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="user"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="user"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="user"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="user"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-          <div class="user"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div> -->
-
-          
-
         </div>
-
+        
         <div id='inputBar'>
-          <input id='ListenButton' type='button' onclick='listen()'
+          <input id='ListenButton' type='button' onclick='start_listening()'
                   class="material-icons-sharp" value='mic' 
                   style="height: 28px; position: relative;"/>
           <input id='TextToSend' class="btn" type='text'/>
@@ -123,9 +59,6 @@
         <script src='./wwi/webots.min.js'></script>
         <script src='./scripts/index.js'></script>
       </div>
-
     </div>
-
   </body>
-
 </html>

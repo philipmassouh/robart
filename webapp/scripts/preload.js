@@ -1,3 +1,4 @@
+// Required modules.
 const fs = require('fs')
 const { contextBridge } = require("electron");
 const { IamAuthenticator } = require('ibm-watson/auth');
@@ -5,7 +6,7 @@ const AssistantV2 = require('ibm-watson/assistant/v2');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const https = require('http');
 const auth = require('../../restAuth.json');
-//const chat = require('./chat.js');
+const chat = require('./chat.js');
 const assistant_id = auth.assistant.assistantId;
 
 // Authenticats stt. Note: only last for 60mins.
@@ -33,47 +34,20 @@ const params = {
 };
 
 // Create the stream.
-var recognizeStream = speechToText.recognizeUsingWebSocket(params), assistant_session = null;
+var recognizeStream = speechToText.recognizeUsingWebSocket(params), 
+    assistant_session = null;
 
 // Listen for events.
 recognizeStream.on('data', function(event) { onEvent('data', event); });
 recognizeStream.on('error', function(event) { onEvent('Error:', event); });
 recognizeStream.on('close', function(event) { onEvent('Close:', event); });
 
-
-function watsonChat(message, item, numButtons) {
-    var chatbox = document.getElementById("chatbox");
-    var bubble = document.createElement("div");
-    bubble.classList.add("robart")
-    bubble.innerText = message
-
-    if (item.length > 1) {
-        var buttons = document.createElement("div");
-
-        for (i = 0; i < numButtons; i++) {
-            let button = document.createElement("input");
-            button.id = "TextToSend"
-            button.classList.add("btn")
-            //TODO one of these is redundant
-            button.innerText = item[i]
-            button.value = "Get" + item[i]
-            buttons.appendChild(button)
-        }
-
-        chatbox.appendChild(buttons)
-    }
-    chatbox.appendChild(bubble)
-}
-
-function userChat(msg) {
-    var chatbox = document.getElementById("chatbox");
-    var bubble = document.createElement("div");
-    bubble.classList.add("user")
-    bubble.innerText = msg
-    chatbox.appendChild(bubble)
-}
-
-// Display events on the console.
+/**
+ * Manages the different events Watson can 
+ * experiance after a response is recived.
+ * @param {string} name The name of the event that has happened.
+ * @param {*} event     The event object from Watson.
+ */
 function onEvent(name, event) {
     if (name == "data") {
         var text = document.getElementById("TextToSend");
@@ -91,6 +65,31 @@ function onEvent(name, event) {
     }
 };
 
+/**
+ * Manages the servers response.
+ * @param {Uint8Array} data The data from the server.
+ * @param {string} code     The status code sent by the server.
+ */
+function server_res(data, code) {
+    if (code == '409') {
+        if (data.includes('No object found.')) {
+            chat.watsonChat("Sorry I couldn't determind the item you were looking for, try rephrasing your statment.", [], -1)
+        }
+        else if (data.includes('Could not determind object.')) {
+            text_d = new TextDecoder().decode(data)
+            options = text_d.split('\r\n')
+            chat.watsonChat("Hmm, that search returned multiple results. Which is it?", options.slice(1, options.length - 1), 3)
+        }
+    } else if (code == '200') {
+        chat.watsonChat(new TextDecoder().decode(data), [], 0)
+    }
+}
+
+/**
+ * Sends a message to Watson and its response to the server.
+ * @param {string} text     The message to be sent to Watson.
+ * @param {string} hostname The server url or ip.
+ */
 function watson_assistant(text, hostname) {
     // Sends user message to watson.
     assistant.message({
@@ -102,9 +101,10 @@ function watson_assistant(text, hostname) {
           }
         })
     .then(res => {
+        // Data from Watson.
         data = JSON.stringify(res.result)
         
-        // Post options.
+        // PUT Header.
         var options = {
             hostname: hostname,
             port: 8000,
@@ -119,18 +119,7 @@ function watson_assistant(text, hostname) {
         // Makes the https request to update the robot.
         var req = https.request(options, res => {
             res.on('data', d => {
-                if (res.statusCode == '409') {
-                    if (d.includes('No object found.')) {
-                        watsonChat("Sorry I couldn't determind the item you were looking for, try rephrasing your statment.", [], -1)
-                    }
-                    else if (d.includes('Could not determind object.')) {
-                        text_d = new TextDecoder().decode(d)
-                        options = text_d.split('\r\n')
-                        watsonChat("Hmm, that search returned multiple results. Which is it?", options.slice(1, options.length - 1), 3)
-                    }
-                } else if (res.statusCode == '200') {
-                    watsonChat(new TextDecoder().decode(d), [], 0)
-                }
+                server_res(d, res.statusCode)
             });
         });
 
@@ -142,7 +131,7 @@ function watson_assistant(text, hostname) {
         // Write data.
         req.write(data);
         req.end();
-    }).catch(err => {
+    }).catch(() => {
         // Creates the session
         assistant.createSession({
             assistantId: assistant_id
@@ -151,7 +140,7 @@ function watson_assistant(text, hostname) {
             assistant_session = res.result.session_id;
             watson_assistant(text, hostname);
         })
-        .catch((err) => {
+        .catch(err => {
             console.log(err);
         });
     });
@@ -179,7 +168,7 @@ contextBridge.exposeInMainWorld(
             }
         },
         wa: (text, hostname) => {
-            userChat(text)
+            chat.userChat(text)
             watson_assistant(text, hostname);
         },
         restart_server: (hostname) => {
