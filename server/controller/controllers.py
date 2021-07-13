@@ -456,7 +456,7 @@ class WebotsRobot(Robot):
             targetValue = 0.0
             for motor in motors.values():
                 motor.setPosition(targetValue)
-            while wait and (sensors['left_contact'].getValue() < 0.5 or 
+            while wait and (sensors['left_contact'].getValue() < 0.5 or
                             sensors['right_contact'].getValue() < 0.5) and \
                     abs(sensors['left_finger'].getValue() - targetValue) > 0.05:
                 self.step(self.timestep)
