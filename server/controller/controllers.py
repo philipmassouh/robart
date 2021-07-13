@@ -1,7 +1,10 @@
 import math as m
 # import time as t
 from abc import ABC, abstractmethod
-from webots.controller import Robot
+try:
+    from webots.controller import Robot
+except Exception as identifier:
+    Robot = object
 
 
 TIME_STEP = 64
