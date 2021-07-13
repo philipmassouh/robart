@@ -182,9 +182,9 @@ class WebotsRobot(Robot):
             list(self.bl_wheel_motors.values()) + \
             list(self.br_wheel_motors.values())
         self.wheel_sensors = list(self.fl_wheel_sensors.values()) + \
-                            list(self.fr_wheel_sensors.values()) + \
-                            list(self.bl_wheel_sensors.values()) + \
-                            list(self.br_wheel_sensors.values())
+            list(self.fr_wheel_sensors.values()) + \
+            list(self.bl_wheel_sensors.values()) + \
+            list(self.br_wheel_sensors.values())
         self.rotation_motors = {
             'front_left': self.getDevice('fl_caster_rotation_joint'),
             'front_right': self.getDevice('fr_caster_rotation_joint'),
@@ -412,7 +412,7 @@ class WebotsRobot(Robot):
             elif self.current_direction == 2:
                 self.turn_left()
 
-    def _set_arm_position(self, left, shoulder_pan, shoulder_lift, 
+    def _set_arm_position(self, left, shoulder_pan, shoulder_lift,
                           upper_roll, elbow_flex, wrist_roll, wait):
         if left:
             motors = self.left_arm_motors
@@ -430,11 +430,11 @@ class WebotsRobot(Robot):
         motors['elbow_flex'].setVelocity(2.5)
         if wait:
             while abs(sensors['shoulder_pan'].getValue() - shoulder_pan) > 0.05 or \
-                abs(sensors['shoulder_lift'].getValue() - shoulder_lift) > 0.05 or \
-                abs(sensors['upper_roll'].getValue() - upper_roll) > 0.05 or \
-                abs(sensors['elbow_flex'].getValue() - elbow_flex) > 0.05 or \
-                abs(sensors['wrist_roll'].getValue() - wrist_roll) > 0.05:
-                    self.step(self.timestep)
+                    abs(sensors['shoulder_lift'].getValue() - shoulder_lift) > 0.05 or \
+                    abs(sensors['upper_roll'].getValue() - upper_roll) > 0.05 or \
+                    abs(sensors['elbow_flex'].getValue() - elbow_flex) > 0.05 or \
+                    abs(sensors['wrist_roll'].getValue() - wrist_roll) > 0.05:
+                self.step(self.timestep)
 
     def _toggle_gripper(self, left, open, torque, wait):
         if left:
@@ -456,9 +456,9 @@ class WebotsRobot(Robot):
             targetValue = 0.0
             for motor in motors.values():
                 motor.setPosition(targetValue)
-            while wait and (sensors['left_contact'].getValue() < 0.5 or \
+            while wait and (sensors['left_contact'].getValue() < 0.5 or 
                             sensors['right_contact'].getValue() < 0.5) and \
-                            abs(sensors['left_finger'].getValue() - targetValue) > 0.05:
+                    abs(sensors['left_finger'].getValue() - targetValue) > 0.05:
                 self.step(self.timestep)
             current_position = sensors['left_finger'].getValue()
             for motor in motors.values():
