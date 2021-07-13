@@ -1,0 +1,228 @@
+{
+    "freeSpace": [],
+    "nextSKU": 18,
+    "objects": {
+        "apple": {
+            "count": 1,
+            "description": "The round fruit of a tree of the rose family, which typically has thin red or green skin and crisp flesh. Many varieties have been developed as dessert or cooking fruit or for making cider.",
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        -1
+                    ],
+                    "sku": "000000000000"
+                }
+            ]
+        },
+        "bottle": {
+            "count": 1,
+            "description": "A glass bottle is a bottle made from glass. Glass bottles can vary in size considerably, but are most commonly found in sizes ranging between about 200 millilitres and 1.5 litres. Common uses for glass bottles include food condiments, soda, liquor, cosmetics, pickling and preservatives.",
+            "entities": [
+                {
+                    "pos": [
+                        4,
+                        1
+                    ],
+                    "sku": "000000000001"
+                }
+            ]
+        },
+        "can": {
+            "count": 1,
+            "description": "A small steel or aluminum container in which food or drink is hermetically sealed for storage over long periods.",
+            "entities": [
+                {
+                    "pos": [
+                        4,
+                        -1
+                    ],
+                    "sku": "000000000002"
+                }
+            ]
+        },
+        "cereal": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        1,
+                        3
+                    ],
+                    "sku": "000000000009"
+                }
+            ]
+        },
+        "cracker": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        4,
+                        3
+                    ],
+                    "sku": "000000000008"
+                }
+            ]
+        },
+        "cup": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        4,
+                        5
+                    ],
+                    "sku": "000000000000C"
+                }
+            ]
+        },
+        "duck": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        4,
+                        7
+                    ],
+                    "sku": "00000000000G"
+                }
+            ]
+        },
+        "extinguisher": {
+            "count": 1,
+            "description": "A portable device that discharges a jet of water, foam, gas, or other material to extinguish a fire. A fire extinguisher is an active fire protection device used to extinguish or control small fires, often in emergency situations. It is not intended for use on an out-of-control fire, such as one which has reached the ceiling, endangers the user, or otherwise requires the expertise of a fire brigade.",
+            "entities": [
+                {
+                    "pos": [
+                        1,
+                        1
+                    ],
+                    "sku": "000000000005"
+                }
+            ]
+        },
+        "flower": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        1,
+                        5
+                    ],
+                    "sku": "00000000000D"
+                }
+            ]
+        },
+        "gnome": {
+            "count": 1,
+            "description": "A small garden ornament in the form of a bearded man with a pointed hat.",
+            "entities": [
+                {
+                    "pos": [
+                        -5,
+                        1
+                    ],
+                    "sku": "000000000007"
+                }
+            ]
+        },
+        "honey": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        3
+                    ],
+                    "sku": "000000000000A"
+                }
+            ]
+        },
+        "jam": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        -5,
+                        3
+                    ],
+                    "sku": "000000000000B"
+                }
+            ]
+        },
+        "orange": {
+            "count": 1,
+            "description": "A round juicy citrus fruit with a tough bright reddish-yellow rind.",
+            "entities": [
+                {
+                    "pos": [
+                        -5,
+                        -1
+                    ],
+                    "sku": "000000000003"
+                }
+            ]
+        },
+        "paint": {
+            "count": 1,
+            "description": "A large steel or aluminum container in which paint is sealed for storage over long periods.",
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        1
+                    ],
+                    "sku": "000000000006"
+                }
+            ]
+        },
+        "trash": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        -5,
+                        5
+                    ],
+                    "sku": "00000000000F"
+                }
+            ]
+        },
+        "tree": {
+            "count": 1,
+            "description": "",
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        5
+                    ],
+                    "sku": "00000000000E"
+                }
+            ]
+        },
+        "water": {
+            "count": 1,
+            "description": "A plastic bottle is a bottle constructed from high-density or low density plastic. Plastic bottles are typically used to store liquids such as water, soft drinks, motor oil, cooking oil, medicine, shampoo, milk, and ink. The size ranges from very small bottles to large carboys.",
+            "entities": [
+                {
+                    "pos": [
+                        1,
+                        -1
+                    ],
+                    "sku": "000000000004"
+                }
+            ]
+        }
+    },
+    "table": []
+}

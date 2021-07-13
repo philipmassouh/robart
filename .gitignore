@@ -130,6 +130,7 @@ dmypy.json
 
 # Node JS
 webapp/node_modules/
+package-lock.json
 
 # VS code settings.
 .vscode/
@@ -139,3 +140,6 @@ webapp/node_modules/
 
 # Other editors
 .vscode/
+
+# Hides auth
+restAuth.json

@@ -63,4 +63,9 @@ npm install
 ### Starting everything:
 
 in \robart run: py app.py
+<<<<<<< HEAD
 in \robart\webapp run: npm start
+=======
+in \robart\webapp run: npm start
+in "C:\Program Files\Webots\msys64\mingw64\bin>" run: webotsw.exe --stream "C:\{your file path}\robart\assets\empty.wbt
+>>>>>>> webui

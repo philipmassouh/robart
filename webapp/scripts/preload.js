@@ -1,27 +1,29 @@
+// Required modules.
 const fs = require('fs')
 const { contextBridge } = require("electron");
 const { IamAuthenticator } = require('ibm-watson/auth');
 const AssistantV2 = require('ibm-watson/assistant/v2');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const https = require('http');
-
-const assistant_id = 'b5428c83-d98e-46e5-ad29-8db5cd50ea16';
+const auth = require('../../restAuth.json');
+const chat = require('./chat.js');
+const assistant_id = auth.assistant.assistantId;
 
 // Authenticats stt. Note: only last for 60mins.
 const speechToText = new SpeechToTextV1({
     authenticator: new IamAuthenticator({
-      apikey: 'R9hW3VQy4vgbFAHYoq9WWnzKoI5QioBVH9UAsWovlwVk',
+      apikey: auth.speechToText.apikey,
     }),
-    serviceUrl: 'https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/1aafab97-84e5-4963-8fdc-8d078b522a15',
+    serviceUrl: auth.speechToText.serviceUrl
 });
 
 // Authenticats wa. Note: only last for 60mins.
 const assistant = new AssistantV2({
     version: '2020-04-01',
     authenticator: new IamAuthenticator({
-        apikey: 'nK1ePaVkS-Vnd9vmVFFr7Y-Pcso0-whbsVPRLqX2e87r',
+        apikey: auth.assistant.apikey,
     }),
-    serviceUrl: 'https://api.us-south.assistant.watson.cloud.ibm.com/instances/7e0acc43-e72c-44b6-ae40-3ce992047bd2'
+    serviceUrl: auth.assistant.serviceUrl
 });
 
 //Sets up speech to text.
@@ -32,14 +34,20 @@ const params = {
 };
 
 // Create the stream.
-var recognizeStream = speechToText.recognizeUsingWebSocket(params), assistant_session = null;
+var recognizeStream = speechToText.recognizeUsingWebSocket(params), 
+    assistant_session = null;
 
 // Listen for events.
 recognizeStream.on('data', function(event) { onEvent('data', event); });
 recognizeStream.on('error', function(event) { onEvent('Error:', event); });
 recognizeStream.on('close', function(event) { onEvent('Close:', event); });
 
-// Display events on the console.
+/**
+ * Manages the different events Watson can 
+ * experiance after a response is recived.
+ * @param {string} name The name of the event that has happened.
+ * @param {*} event     The event object from Watson.
+ */
 function onEvent(name, event) {
     if (name == "data") {
         var text = document.getElementById("TextToSend");
@@ -57,16 +65,86 @@ function onEvent(name, event) {
     }
 };
 
-//Creates session.
-assistant.createSession({
-    assistantId: assistant_id
-  })
+/**
+ * Manages the servers response.
+ * @param {Uint8Array} data The data from the server.
+ * @param {string} code     The status code sent by the server.
+ */
+function server_res(data, code) {
+    if (code == '409') {
+        if (data.includes('No object found.')) {
+            chat.watsonChat("Sorry I couldn't determind the item you were looking for, try rephrasing your statment.", [], -1)
+        }
+        else if (data.includes('Could not determind object.')) {
+            text_d = new TextDecoder().decode(data)
+            options = text_d.split('\r\n')
+            chat.watsonChat("Hmm, that search returned multiple results. Which is it?", options.slice(1, options.length - 1), 3)
+        }
+    } else if (code == '200') {
+        chat.watsonChat(new TextDecoder().decode(data), [], 0)
+    }
+}
+
+/**
+ * Sends a message to Watson and its response to the server.
+ * @param {string} text     The message to be sent to Watson.
+ * @param {string} hostname The server url or ip.
+ */
+function watson_assistant(text, hostname) {
+    // Sends user message to watson.
+    assistant.message({
+        assistantId: assistant_id,
+        sessionId: assistant_session,
+        input: {
+          'message_type': 'text',
+          'text': text
+          }
+        })
     .then(res => {
-      assistant_session = res.result.session_id;
-    })
-    .catch(err => {
-      console.log(err);
+        // Data from Watson.
+        data = JSON.stringify(res.result)
+        
+        // PUT Header.
+        var options = {
+            hostname: hostname,
+            port: 8000,
+            path: '',
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            }
+        }
+
+        // Makes the https request to update the robot.
+        var req = https.request(options, res => {
+            res.on('data', d => {
+                server_res(d, res.statusCode)
+            });
+        });
+
+        // Error log.
+        req.on('error', err => {
+            console.log(err)
+        });
+
+        // Write data.
+        req.write(data);
+        req.end();
+    }).catch(() => {
+        // Creates the session
+        assistant.createSession({
+            assistantId: assistant_id
+        })
+        .then((res) => {
+            assistant_session = res.result.session_id;
+            watson_assistant(text, hostname);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     });
+}
 
 // Allows program to only use some prebuilt functions.
 contextBridge.exposeInMainWorld(
@@ -90,76 +168,11 @@ contextBridge.exposeInMainWorld(
             }
         },
         wa: (text, hostname) => {
-            // Sends user message to watson.
-            assistant.message({
-                assistantId: assistant_id,
-                sessionId: assistant_session,
-                input: {
-                  'message_type': 'text',
-                  'text': text
-                  }
-                })
-            .then(res => {
-                data = JSON.stringify(res.result)
-                
-                // Post options.
-                var options = {
-                    hostname: hostname,
-                    port: 8000,
-                    path: '',
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Content-Length': data.length
-                    }
-                }
-
-                // Makes the https request to update the robot.
-                var req = https.request(options, res => {
-                    console.log(res.statusCode);
-                  
-                    res.on('data', d => {
-                      process.stdout.write(d)
-                    });
-                });
-
-                // Error log.
-                req.on('error', error => {
-                    console.error(error)
-                });
-
-                // Write data.
-                req.write(data);
-                req.end();
-            })
-            .catch(err => {
-                console.log("Here" + err);
-            });
+            chat.userChat(text)
+            watson_assistant(text, hostname);
         },
         restart_server: (hostname) => {
-            // Post options.
-            var options = {
-                hostname: hostname,
-                port: 8000,
-                path: '',
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'text',
-                    'Content-Length': 4
-                }
-            }
-
-            // Makes the https request to update the robot.
-            var req = https.request(options, res => {
-                res.on('data', d => {
-                    process.stdout.write(d)
-                });
-            });
-
-            // Error log.
-            req.on('error', error => {
-                console.error(error)
-            });
+            fetch('http://' + hostname + ':8000')
         }
     }
 );

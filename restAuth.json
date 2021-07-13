@@ -1,0 +1,24 @@
+{   
+    
+    "speechToText": {
+        "apikey":"R9hW3VQy4vgbFAHYoq9WWnzKoI5QioBVH9UAsWovlwVk",
+        "serviceUrl":"https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/1aafab97-84e5-4963-8fdc-8d078b522a15"
+    },
+
+    "assistant": {
+        "apikey":"nK1ePaVkS-Vnd9vmVFFr7Y-Pcso0-whbsVPRLqX2e87r",
+        "serviceUrl":"https://api.us-south.assistant.watson.cloud.ibm.com/instances/7e0acc43-e72c-44b6-ae40-3ce992047bd2",
+        "assistantId":"b5428c83-d98e-46e5-ad29-8db5cd50ea16"
+    },
+
+    "discovery": {
+        "apikey":"vr1W494S4MhOU4C1HpL6pL_OjWBVZ4rkuQVdzq8JteLa",
+        "serviceUrl":"https://api.us-east.discovery.watson.cloud.ibm.com/instances/ff6fa3fb-0218-4710-bd60-c8c1dfea10d8"
+    },
+
+    "server": {
+        "ipv4":"74.139.104.221",
+        "local":"192.168.1.31"
+    }
+
+}
