@@ -1,5 +1,5 @@
 import math as m
-import time as t
+# import time as t
 from abc import ABC, abstractmethod
 from webots.controller import Robot
 
@@ -178,13 +178,13 @@ class WebotsRobot(Robot):
             'right': self.br_wheel_motors['right'].getPositionSensor()
         }
         self.wheel_motors = list(self.fl_wheel_motors.values()) + \
-                            list(self.fr_wheel_motors.values()) + \
-                            list(self.bl_wheel_motors.values()) + \
-                            list(self.br_wheel_motors.values())
+            list(self.fr_wheel_motors.values()) + \
+            list(self.bl_wheel_motors.values()) + \
+            list(self.br_wheel_motors.values())
         self.wheel_sensors = list(self.fl_wheel_sensors.values()) + \
-                             list(self.fr_wheel_sensors.values()) + \
-                             list(self.bl_wheel_sensors.values()) + \
-                             list(self.br_wheel_sensors.values())
+                            list(self.fr_wheel_sensors.values()) + \
+                            list(self.bl_wheel_sensors.values()) + \
+                            list(self.br_wheel_sensors.values())
         self.rotation_motors = {
             'front_left': self.getDevice('fl_caster_rotation_joint'),
             'front_right': self.getDevice('fr_caster_rotation_joint'),
@@ -249,7 +249,7 @@ class WebotsRobot(Robot):
             'left_arm': self.getDevice('l_forearm_cam_sensor'),
             'right_arm': self.getDevice('r_forearm_cam_sensor'),
             'left_eye': self.getDevice('wide_stereo_l_stereo_camera_sensor'),
-            'right_eye': self.getDevice('wide_stereo_r_stereo_camera_sensor') 
+            'right_eye': self.getDevice('wide_stereo_r_stereo_camera_sensor')
         }
         self.left_hand_sensors = {
             'left_contact': self.getDevice('l_gripper_l_finger_tip_contact_sensor'),
@@ -270,7 +270,7 @@ class WebotsRobot(Robot):
         self.inertial_unit = self.getDevice('inertial unit')
         self.gps = self.getDevice('gps')
         self.compass = self.getDevice('compass')
-        self.available_torques = [0.0,] * 8
+        self.available_torques = [0.0, ] * 8
         self.current_coords = [8.0, -1.0]
         self.home_coords = [8.0, -1.0]
         self.current_direction = 0
@@ -396,7 +396,7 @@ class WebotsRobot(Robot):
             elif self.current_direction == 2:
                 self.turn_right()
             elif self.current_direction == 3:
-                self.turn_around()   
+                self.turn_around()
         elif direction == 2:
             if self.current_direction == 0:
                 self.turn_around()
@@ -412,7 +412,8 @@ class WebotsRobot(Robot):
             elif self.current_direction == 2:
                 self.turn_left()
 
-    def _set_arm_position(self, left, shoulder_pan, shoulder_lift, upper_roll, elbow_flex, wrist_roll, wait):
+    def _set_arm_position(self, left, shoulder_pan, shoulder_lift, 
+                          upper_roll, elbow_flex, wrist_roll, wait):
         if left:
             motors = self.left_arm_motors
             sensors = self.left_arm_sensors
@@ -433,7 +434,7 @@ class WebotsRobot(Robot):
                 abs(sensors['upper_roll'].getValue() - upper_roll) > 0.05 or \
                 abs(sensors['elbow_flex'].getValue() - elbow_flex) > 0.05 or \
                 abs(sensors['wrist_roll'].getValue() - wrist_roll) > 0.05:
-                self.step(self.timestep)
+                    self.step(self.timestep)
 
     def _toggle_gripper(self, left, open, torque, wait):
         if left:
@@ -446,7 +447,7 @@ class WebotsRobot(Robot):
         for motor in motors.values():
             motor.setAvailableTorque(maxTorque)
         if open:
-            targetValue = 0.5 
+            targetValue = 0.5
             for motor in motors.values():
                 motor.setPosition(targetValue)
             while wait and abs(sensors['left_finger'].getValue() - targetValue) > 0.05:
@@ -455,8 +456,9 @@ class WebotsRobot(Robot):
             targetValue = 0.0
             for motor in motors.values():
                 motor.setPosition(targetValue)
-            while wait and (sensors['left_contact'].getValue() < 0.5 or sensors['right_contact'].getValue() < 0.5) and \
-                abs(sensors['left_finger'].getValue() - targetValue) > 0.05:
+            while wait and (sensors['left_contact'].getValue() < 0.5 or \
+                            sensors['right_contact'].getValue() < 0.5) and \
+                            abs(sensors['left_finger'].getValue() - targetValue) > 0.05:
                 self.step(self.timestep)
             current_position = sensors['left_finger'].getValue()
             for motor in motors.values():
@@ -497,8 +499,9 @@ class WebotsRobot(Robot):
 
     def drive(self, distance, speed=HALF_WHEEL_SPEED):
         initial_wheel_position = self.fl_wheel_sensors['left'].getValue()
-        wheel_travel_distane = 0 
-        alignment = self.gps.getValues()[0] if self.current_direction in (0, 2) else self.gps.getValues()[2]
+        wheel_travel_distane = 0
+        alignment = self.gps.getValues()[0] \
+            if self.current_direction in (0, 2) else self.gps.getValues()[2]
         wheel_speed = speed if distance > 0 else -speed
         self._set_wheels_speed(wheel_speed)
         if self.current_direction == 0:
