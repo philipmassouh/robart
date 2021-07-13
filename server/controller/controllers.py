@@ -3,7 +3,7 @@ import math as m
 from abc import ABC, abstractmethod
 try:
     from webots.controller import Robot
-except Exception as identifier:
+except Exception:
     Robot = object
 
 
