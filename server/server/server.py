@@ -118,7 +118,7 @@ class Server(socketserver.BaseRequestHandler):
                     o_index = i
                 elif wa_entity[0] == 'location':
                     l_index = i
-  
+
                 # Finds current value in all entities.
                 if entity_val == wa_entity[1]:
                     index = i
@@ -187,7 +187,7 @@ class Server(socketserver.BaseRequestHandler):
 
                 # Log data in console.
                 print("Recivied data from -", self.client_address, "Command generic:",
-                wa_intent[0], "-", wa_entities[o_index][1])
+                      wa_intent[0], "-", wa_entities[o_index][1])
             else:
                 # Inform client that there is no object.
                 self.response('409 Conflict', 'No object found.')

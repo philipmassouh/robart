@@ -7,7 +7,7 @@ from server.controller.controllers import RobotController, WebotsRobot
 class OrderManager(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-    
+
         # Opens database.
         file = open('./server/server/database.json')
 
