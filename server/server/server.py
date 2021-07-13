@@ -7,7 +7,28 @@ from server.server.order_manager import OrderManager
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 class Server(socketserver.BaseRequestHandler):
+    # Server constructor.
     def __init__(self, host="192.168.1.31", port=8000):
+        # Opens webots.
+        self.webots_search()
+
+        # Initializes variables.
+        self.HOST = host
+        self.PORT = port
+        self.om = OrderManager()
+        self.running = False
+
+        # Open Authentication JSON
+        f = open('restAuth.json')
+        self.auth = json.load(f)
+        f.close()
+
+    # Makes object callable.
+    def __call__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    # Attempts to turn on server webots.
+    def webots_search(self):
         started = False
         # Check if webots is running. Takes a moment.
         r = os.popen('tasklist /v').read().strip().split('\n')  # Gets all running exes.
@@ -26,7 +47,6 @@ class Server(socketserver.BaseRequestHandler):
             subprocess.Popen([webots, "--stream", world])
 
             # Pauses for program to open for a moment.
-            # Using a for loop so its based on the system.
             for q in range(150000000):
                 # Little loading bar for fun.
                 if (q + 1) % 1500000 == 0:
@@ -39,27 +59,11 @@ class Server(socketserver.BaseRequestHandler):
             os.system('cls' if os.name == 'nt' else 'clear')
             print()
 
-        # Open Auth JSON
-        f = open('restAuth.json')
-        self.auth = json.load(f)
-        f.close()
-
-        # Initializes variables.
-        self.HOST = host
-        self.PORT = port
-        self.om = OrderManager()
-        self.running = False
-
-    # Makes object callable.
-    def __call__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
     # Handles HTTP requests.
     def handle(self):
         try:
+            # Gets and seperates client request.
             data = str(self.request.recv(1024), "utf-8").split('\n')
-
             header_end = data.index('\r')
             method = data[0]
 
@@ -73,9 +77,11 @@ class Server(socketserver.BaseRequestHandler):
                 # Creates the command.
                 self.generate_command(json_dict)
             else:
+                # Crashes if it gets a response it doesn't like.
                 self.response('503 Service Unavailable', 'This server is not normal.')
                 self.stop()
         except UnicodeDecodeError:
+            # Crashes if it gets a response it doesn't like.
             self.response('503 Service Unavailable', 'This server is not normal.')
             self.stop()
 
@@ -132,13 +138,17 @@ class Server(socketserver.BaseRequestHandler):
                 if entity_con > wa_entities[i][2]:
                     wa_entities[i] = (entity_nam, entity_val, entity_con)
 
-        # Error checks.
+        # Checks for errors.
+        self.error_check(wa_intent, wa_entities, o_index)
+        
+    # Checks for errors.
+    def error_check(self, wa_intent, wa_entities, o_index):
         if len(wa_entities) == 0:
             # Inform client that there is no object.
             self.response('409 Conflict', 'No object found.')
         else:
-            # If there is an object or not.
-            found = False
+            found = False # If there is an object or not.
+            
             # Checks if there is at least an object in the list.
             for wa_entity in wa_entities:
                 if wa_entity[0] == 'object' or wa_entity[0] == 'SKU':
@@ -155,26 +165,22 @@ class Server(socketserver.BaseRequestHandler):
                         # Adds the get order to the order stack.
                         self.om.add_order(('get', to_get[0]))
 
-                        # Tells user what it is getting.
-                        res = "I am getting a " + wa_entities[o_index][1] + "."
-
                         # Inform the client that all is well then get the item.
+                        res = "I am getting a " + wa_entities[o_index][1] + "."
                         self.response("200 OK", res)
                     else:
-                        # The message to send.
-                        res = 'Could not determind object.\r\n' + '\r\n'.join(to_get)
-
                         # Send alternatives.
+                        res = 'Could not determine object.\r\n' + '\r\n'.join(to_get)
                         self.response("409 Conflict", res)
                 else:
+                    # Sends put order.
                     self.om.add_order((
                         'put', 
                         (wa_entities[o_index][1], {'pos': [0.0, 0.0], 'sku': '000000000000'}, 1)
                     ))
-                    res = "I am placing " + wa_entities[o_index][1] + " away."
-
-
+                    
                     # Inform the client that all is well then put the item.
+                    res = "I am placing " + wa_entities[o_index][1] + " away."
                     self.response("200 OK", res)
 
                 # Log data in console.
@@ -189,18 +195,20 @@ class Server(socketserver.BaseRequestHandler):
         name = entites[index][1]
         exact = self.om.database['objects'].get(name)
 
+        print(exact)
+
         if exact != None:
             return [(name, exact, 1)]
         else:
             # Authenticate discovery.
-            auth = self.auth['discovery']
-            authenticator = IAMAuthenticator(auth['apikey'])
-            discovery = DiscoveryV2(
-                version='2019-11-22',
-                authenticator=authenticator
-            )
+            # auth = self.auth['discovery']
+            # authenticator = IAMAuthenticator(auth['apikey'])
+            # discovery = DiscoveryV2(
+            #     version='2019-11-22',
+            #     authenticator=authenticator
+            # )
 
-            discovery.set_service_url(auth['serviceUrl'])
+            # discovery.set_service_url(auth['serviceUrl'])
 
             # Go to discovery and find related words.
 
@@ -211,24 +219,19 @@ class Server(socketserver.BaseRequestHandler):
     def response(self, code, message='All good.'):
         self.request.send(bytes("HTTP/1.1 " + code + '\r\n\n' + message + '\r\n', 'utf-8'))
 
+    # Stops the server.
     def stop(self):
         self.running = False
 
-        # When stoping server restart sim:
-        # from controller import Supervisor
-        # sup = Supervisor(Robot)
-        # sup.simulationReset()
-
     # Starts the server.
     def start(self):
-        # Starts the order manager.
+        # Starts the order manager and lets server run.
         self.om.start()
-
-        # Starts the server.
         self.running = True
 
         # Starts the server.
         with socketserver.TCPServer((self.HOST, self.PORT), self) as httpd:
+            # Prints confirmation that it runs.
             print("Server started at: ", self.HOST, self.PORT)
 
             # HTTP request loop.

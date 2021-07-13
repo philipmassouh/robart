@@ -11,6 +11,7 @@ class OrderManager(threading.Thread):
         # Opens database.
         file = open('./server/server/database.json')
 
+        # Initial variables.
         self.running = True
         self.orders = []
         self.orders_hist = []
@@ -20,23 +21,22 @@ class OrderManager(threading.Thread):
     # Starts the order manager.
     def run(self):
         while self.running:
-            # Gets the oldest order.
             if len(self.orders) > 0:
+                # Gets the oldest order.
                 order = self.orders.pop(0)
                 operation = order[0]
                 data = order[1]
 
                 # Tests if the op is get or put.
                 if operation == 'get':
+                    # Gets the number or items requested.
                     for _ in range(data[2]):
                         last = self.database['objects'][data[0]]['count'] - 1
 
                         if last > -1:
-                            # Remove item from row.
-                            coords = self.database['objects'][data[0]]['entities'][last]['pos']
-
                             # Gets the item requested.
-                            self.controller.goto_coords(coords)
+                            coords = self.database['objects'][data[0]]['entities'][last]['pos']
+                            self.controller.get_at_coords(coords)
 
                             # Update count object and free space.
                             self.database['objects'][data[0]]['count'] = last
@@ -61,8 +61,7 @@ class OrderManager(threading.Thread):
                             self.database['objects'][name]['entities'] = []
 
                         # Go to place it.
-                        self.controller.return_item()
-                        #self.controller.goto_coords(coords)
+                        self.controller.goto_coords(coords)
 
                         # Add the item to the database.
                         self.database['objects'][name]['count'] += 1
