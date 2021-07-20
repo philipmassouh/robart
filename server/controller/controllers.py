@@ -66,9 +66,10 @@ class AbstractRobot(ABC):
 
 class TextRobot(AbstractRobot):
 
-    def __init__(self, home_coords):
+    def __init__(self, home_coords, name='Robart'):
         super().__init__()
         self.home_coords = home_coords
+        self.name = name
         print(f'Initializing at position {home_coords}')
 
     def set_gaze_down(self, down, wait=True):
