@@ -7,7 +7,7 @@ def test_can_instantiate_robot_controller():
 
 def test_drive_forward():
     controller = RobotController(TextRobot, name='Robart')
-    output = controller.drive_forward_(100, 10)
-    assert "Driving forward" in output
+    output = controller.drive(100, 10)
+    assert "Driving" in output
     assert "distance 100" in output
     assert "speed 10" in output

@@ -86,7 +86,7 @@ class TextRobot(AbstractRobot):
         print(f'{self.name}: Facing direction {direction}')
 
     def drive(self, distance, speed=WHEEL_SPEED['half']):
-        print(f'{self.name}: Driving {distance} at speed {speed}')
+        print(f'{self.name}: Driving distance {distance} at speed {speed}')
 
     def pick_object(self, distance=0.205, speed=WHEEL_SPEED['quarter']):
         print(f'{self.name}: Picking object {distance} away at speed {speed}')
