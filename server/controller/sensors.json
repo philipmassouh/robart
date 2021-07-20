@@ -1,0 +1,19 @@
+{
+    "camera_sensors": {
+        "l_eye": "wide_stereo_l_stereo_camera_sensor",
+        "r_eye": "wide_stereo_r_stereo_camera_sensor",
+        "l_arm": "l_forearm_cam_sensor",
+        "r_arm": "r_forearm_cam_sensor"
+    },
+    "contact_sensors": {
+        "ll_finger": "l_gripper_l_finger_tip_contact_sensor",
+        "lr_finger": "l_gripper_r_finger_tip_contact_sensor",
+        "rl_finger": "r_gripper_l_finger_tip_contact_sensor",
+        "rr_finger": "r_gripper_r_finger_tip_contact_sensor"
+    },
+    "body_sensors": {
+        "compass": "compass",
+        "gps": "gps",
+        "inertial_unit": "inertial unit"
+    }
+}
