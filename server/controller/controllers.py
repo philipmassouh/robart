@@ -73,27 +73,41 @@ class TextRobot(AbstractRobot):
         print(f'Initializing at position {home_coords}')
 
     def set_gaze_down(self, down, wait=True):
-        print(f'{self.name}: Looking {"down" if down else "up"}')
+        output = f'{self.name}: Looking {"down" if down else "up"}'
+        print(output)
         if wait:
             print(f'{self.name}: Waiting')
+        return output
 
     def turn_left(self, speed=WHEEL_SPEED['eigth']):
-        print(f'{self.name}: Turning left at speed {speed}')
+        output = f'{self.name}: Turning left at speed {speed}'
+        print(output)
+        return output
 
     def turn_right(self, speed=WHEEL_SPEED['eigth']):
-        print(f'{self.name}: Turning right at speed {speed}')
+        output = f'{self.name}: Turning right at speed {speed}'
+        print(output)
+        return output
 
     def face_direction(self, direction):
-        print(f'{self.name}: Facing direction {direction}')
+        output = f'{self.name}: Facing direction {direction}'
+        print(output)
+        return output
 
     def drive(self, distance, speed=WHEEL_SPEED['half']):
-        print(f'{self.name}: Driving distance {distance} at speed {speed}')
+        output = f'{self.name}: Driving distance {distance} at speed {speed}'
+        print(output)
+        return output
 
     def pick_object(self, distance=0.205, speed=WHEEL_SPEED['quarter']):
-        print(f'{self.name}: Picking object {distance} away at speed {speed}')
+        output = f'{self.name}: Picking object {distance} away at speed {speed}'
+        print(output)
+        return output
 
     def place_object(self, distance=0.2025, speed=WHEEL_SPEED['quarter']):
-        print(f'{self.name}: Placing object {distance} away at speed {speed}')
+        output = f'{self.name}: Placing object {distance} away at speed {speed}'
+        print(output)
+        return output
 
 
 class WebotsRobot(AbstractRobot, Robot):
