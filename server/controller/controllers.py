@@ -1,7 +1,10 @@
 import json
 import math as m
 from abc import ABC, abstractmethod
-from webots.controller import Robot
+try:
+    from webots.controller import Robot
+except:
+    Robot = object
 
 TIME_STEP = 32
 MAX_WHEEL_SPEED = 15.0
