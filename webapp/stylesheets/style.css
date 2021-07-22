@@ -1,166 +1,299 @@
-/* https://coolors.co/2c302e-474a48-909590-9ae19d-537a5a */
-@media screen and (prefers-color-scheme: light) {
-  :root {
-    --primary: #2C302E;
-    --secondary: #474A48;
-    --tertiary: #909590;
-    --green1: #537A5A;
-    --green2: #9AE19D;
-  }
+/* -----------------------------------------------------
+
+        COLORS
+    
+    https://coolors.co/2c302e-474a48-909590-9ae19d-537a5a
+
+*/
+
+:root {
+  --gray1: #909590;
+  --gray2: #474A48;
+  --gray3: #2C302E;
+  --lightgreen: #9AE19D;
+  --darkgreen: #537A5A;
+  --white: white;
 }
 
-@media screen and (prefers-color-scheme: dark) {
-  :root {
-    --primary: #909590;
-    --secondary: #474A48;
-    --tertiary: #2C302E;
-    --green1: #9AE19D;
-    --green2: #537A5A;
-  }
+:root.dark {
+  --primary: var(--gray1);
+  --secondary: var(--gray2);
+  --background: var(--gray3);
+  --green1: var(--lightgreen);
+  --green2: var(--darkgreen);
+  --buttonBackground: var(--darkgreen);
+  --buttonForeground: var(--white);
 }
 
-html {
-  font-family: "Arial", "Helvetica", "Verdana", "sans-serif";
-  background-color: var(--tertiary);
-  color: var(--green1);
+:root.light {
+  --primary: var(--gray3);
+  --secondary: var(--gray2);
+  --background: var(--white);
+  --green1: var(--darkgreen);
+  --green2: var(--lightgreen);
+  --buttonBackground: var(--lightgreen);
+  --buttonForeground: var(--gray3);
+}
+
+
+
+
+
+/* -----------------------------------------------------
+
+        GLOBAL ITEMS
+
+*/
+
+* {
   box-sizing: border-box;
-  margin: 5px;
 }
 
-.material-icons-sharp {
-  background-color: var(--green2); 
-  border: none;
-  color: white;
-  padding: 0;
-  margin: 0;
-}
-
-.material-icons-sharp:hover {
-  background-color: var(--tertiary); 
-  transition-duration: 0.8s;
-  color: var(--secondary);
-}
-
-::-webkit-scrollbar {
-  background-color: var(--tertiary);
-  color: black;
-}
-
- ::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  /* background: #232624; */
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.header {
-  flex-direction: row;
-  display: flex;
-  margin-bottom: 50px;
-}
-
-.header>div>img {
-  width:300px;
-}
-
-#prompt {
+html, body {
+  font-family: "Arial", "Helvetica", "Verdana", "sans-serif";
+  height: 100%;
   width: 100%;
-  display: flex;
-  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--background);
 }
 
-#main {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+textarea:focus, input:focus{
+  outline: none;
 }
+
 
 .btn {
-  background-color:var(--green2); 
-  border: none;
-  color: white;
-  padding: 5px;
+  background-color:var(--buttonBackground); 
+  color: var(--buttonForeground);
   text-align: center;
   text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
+  border: none;
+  padding: 0px;
+  margin: 5px;
+  height: 50px;
+  width: 50px;
+  border-radius: 9px;
 }
 
 .btn:hover {
   background-color: var(--green1); 
   transition-duration: 0.8s;
-  color: var(--secondary);
+  color: var(--background);
 }
 
-#TextToSend {
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+  background-color: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
   background-color: var(--primary);
-  width: 100%;
-  text-align: left;
+}
+
+/* ::-webkit-scrollbar-thumb:hover {
+  background-color: blue;
+} */
+
+#main {
+  display: flex;
+  flex-direction: row;
+  margin: 0px;
+  border-radius: 15px;
+  height: 100vh;
+}
+
+
+
+
+
+/* -----------------------------------------------------
+
+        SIDEBAR
+
+*/
+
+#sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  height: 100vh;
+  padding: 20px;
+  justify-content: space-between;
+}
+
+.buttonGroup>input {
+  height: 60px;
+  width: 60px;
+  padding: 0;
+  margin: 5px 0px;
+}
+
+
+
+
+
+/* -----------------------------------------------------
+
+        PLAYER DIV
+
+*/
+
+#playerHeader {
+
+}
+
+#playerDiv {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--secondary);
+}
+
+#toolBar {
+  background-color: var(--gray3);
+}
+
+#chatTop {
+  display: flex;
+}
+
+.toolBarButton {
+  background-color:var(--buttonBackground); 
+  color: var(--buttonForeground);
+  border: none;
+  /* TODO if you have time figure this out*/
+  /* height: 40px; */
+  /* width: 40px; */
+  border-radius: 9px;
+  margin: 5px;
+}
+
+.toolBarButton:hover {
+  background-color: var(--green1); 
+  transition-duration: 0.8s;
+  color: var(--background);
+}
+
+
+
+
+
+/* -----------------------------------------------------
+
+        INTERACTION
+
+*/
+
+#hostControls {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: var(--primary);
+  border-radius: 12.5px;
+  flex: 1 0 auto;
 }
 
 #hostInput {
   background-color: var(--primary);
-  margin: 20px 0px;
+  flex: 1;
 }
 
-.main {
+#interact {
+  flex: 1;
   display: flex;
-  justify-content: center;
   flex-direction: column;
-}
-
-#chat {
-  width: 50%;
-  height: 80vh;
+  height: 100vh;
+  padding: 15px;
 }
 
 #chatbox {
-  overflow: scroll;
-  margin-right: 20px;
-  height: 60vh;
+  display: flex;
+  flex: 1 0 auto;
+  padding: 15px 0px;
+  overflow: auto;
+  height: calc(100vh - 150px);
 }
 
-#chatbox>div {
-  padding: 10px;
+#conversation {
+  overflow-y: scroll;
+  max-height: 100%;
+}
+
+#conversation>div {
+  padding: 0px;
   margin: 15px;
   max-width: 50%;
   display: inline-block;
   clear: both;
 }
 
+p {
+  padding: 10px;
+  margin: 0;
+}
+
 .user {
-  background-color: var(--green2);
-  color: white;
+  background-color: var(--lightgreen);
+  color: var(--gray3);
   float: right;
+  border-radius: 10px;
 }
 
 .robart {
-  background-color: var(--green1);
-  color: #474A48;
+  background-color: var(--darkgreen);
+  color: var(--white);
   float: left;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+#options {
+  display: flex;
+  flex-direction: column;
+}
+
+#options>input {
+  background-color: var(--gray3);
+  color: var(--white);
+  text-decoration: none;
+  border-width: 1px;
+  border-style: none solid solid solid;
+  border-color: var(--darkgreen);
+  padding: 10px 5px;
+}
+
+#options>input:hover {
+background-color: var(--darkgreen);
+}
+
+#options>input:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 #inputBar {
-  align-items: center;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: var(--primary);
+  border-radius: 12.5px;
+  flex: 0 0 auto;
 }
 
-#playerDiv {
-  display: flex;
-  flex-direction: column;
-  height: 80vh;
-  width: 50%;
+#TextToSend {
+  background-color: var(--primary);
+  text-align: left;
+  flex: 1;
+  color: var(--gray3);
+  font-size: 20px;
 }

@@ -9,6 +9,7 @@ var view = null,
   hostname = null,
   mobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
+  
 if (mobileDevice) {
   let head = document.getElementsByTagName('head')[0];
   let jqueryTouch = document.createElement('script');
@@ -26,6 +27,7 @@ if (mobileDevice) {
 /**
  * Initializes all of the variables.
  */
+
 function init() {
   // TODO: Ensure that user media is set up for the right browser + older browser support.
   if (navigator.mediaDevices.getUserMedia) {
@@ -74,11 +76,28 @@ function init() {
   playerDiv = document.getElementById('playerDiv');
   overlay = document.getElementById('prompt');
   hostInput = document.getElementById('hostInput');
+//TODO set page default based on os
+  const colorButtons = document.querySelectorAll(".btn__color")
+  colorButtons.forEach(btn => {
+    btn.addEventListener("click", (event) => {
+      if (btn.value == "light_mode") {
+        btn.value = "dark_mode";
+        document.documentElement.className = "dark"
+      } else if (btn.value == "dark_mode") {
+        btn.value = "light_mode"
+        document.documentElement.className = "light"
+      }
+    });
+  });
+
+  document.querySelector("#connectButton").addEventListener("click", connect)
 }
 
 /**
  * Connects to Webots and the server.
  */
+
+//TODO toggle_on is the slider right and toggle_off is the slider left.
 function connect() {
   hostname = hostInput.value;
 
@@ -88,7 +107,7 @@ function connect() {
     view.setTimeout(-1); // disable timeout that stops the simulation after a given time
     view.open('ws://' + hostname + ':1234', 'x3d');
     view.onquit = disconnect;
-    connectButton.value = 'Disconnect';
+    connectButton.value = 'toggle_on';
     connectButton.onclick = disconnect;
   }
 }
@@ -100,7 +119,7 @@ function disconnect() {
   view.close();
   view = null;
   playerDiv.innerHTML = null;
-  connectButton.value = 'Connect';
+  connectButton.value = 'toggle_off';
   connectButton.onclick = show;
   hostname = '';
 }

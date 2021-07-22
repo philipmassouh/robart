@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns='http://www.w3.org/1999/xhtml'>
+<html class="dark" xmlns='http://www.w3.org/1999/xhtml'>
 
   <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
@@ -10,45 +10,42 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
   </head>
 
-
   <body>
-    <!-- HEADER -->
-    <div class="header">
-      <!-- TODO: figure out why svg isnt working -->
-      <div> <img src="assets/robart.png"> </img> </div>
-      <div id="prompt">
-        <div>
-          <input class="btn" id="hostInput" type="password" value="localhost"/>
-          <input class="btn" type='button' value='Confirm' onclick='connect()'/>
-        </div>
-      </div>
-    </div>
 
-
-
-    <!-- MAIN -->
     <div id="main">
 
-      <div id="chat">
-        <div id="chatbox">
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-        </div>
+
+
+      <!-- -------------------------------------------------------------------------------------------------------
         
-        <div id='inputBar'>
-          <input id='ListenButton' type='button' onclick='start_listening()'
-                  class="material-icons-sharp" value='mic' 
-                  style="height: 28px; position: relative;"/>
-          <input id='TextToSend' class="btn" type='text'/>
-          <input id='SendButton' type='button' onclick='send()' 
-                  class="material-icons-sharp" value='keyboard_return' 
-                  style="height: 28px; width: 50px; position: relative; margin-right: 35px;"/>
+              SIDEBAR  
+      
+      -->
+      <div id="sidebar">
+        <div class="buttonGroup">
+          <input type='button' value='home'          class="btn btn__color material-icons-sharp"/>
+        </div>
+
+        <div class="buttonGroup">
+          <input type='button' value='smart_toy'     class="btn btn__color material-icons-sharp"/>
+          <input type='button' value='inventory_2'   class="btn btn__color material-icons-sharp"/> 
+          <input type='button' value='help'          class="btn btn__color material-icons-sharp"/>
+        </div>
+
+        <div class="buttonGroup">
+          <input type='button' value='exit_to_app'   class="btn btn__color material-icons-sharp"/> 
         </div>
       </div>
 
+
+
+      <!-- --------------------------------------------------------------------------------------------------------
+
+              PLAYER DIV 
+
+      -->
       <div id='playerDiv'>
+        <div id='playerHeader'>  </div>
         <script src='https://code.jquery.com/jquery-3.1.1.min.js' 
         integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=' crossorigin='anonymous'></script>
         <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js' 
@@ -59,6 +56,55 @@
         <script src='./wwi/webots.min.js'></script>
         <script src='./scripts/index.js'></script>
       </div>
+
+
+
+      <!-- -------------------------------------------------------------------------------------------------------
+        
+              INTERACTION 
+    
+      -->
+      <div id="interact">
+        <div id="chatTop">
+          <input type='button'   value='dark_mode'     class="btn btn__color material-icons-sharp"/>
+          <input type='button'   value='accessibility' class="btn btn__color material-icons-sharp"/> 
+          <div id="hostControls">
+            <input type='password' value='localhost'     class="btn"                      id="hostInput"/>
+            <input type='button'   value='dns'           class="btn material-icons-sharp" id="connectButton"/>
+          </div>
+        </div>
+
+        <div id="chatbox">
+          <div id="conversation">
+            <div class="robart"> <p> Hi, I'm Robart, your warehouse management assistant! 
+              You can give me a command using your microphone or by typing in the chat
+              below! </p>
+            </div>
+            <div class="user"> <p> Can you get me a can? </p>
+            </div>
+            <div class="robart"> <p> Sorry, that query was a little vague for me, 
+              I've displayed some options below:</p>
+              <div id="options">
+                <input type='button' value='Can of paint'>
+                <input type='button' value='Can of soda'>
+                <input type='button' value='Can of peas'>
+                <input type='button' value='None of these'>
+              </div>
+            </div>
+
+          </div>
+        </div>  
+        <div id='inputBar'>
+          <input type='button' value='mic'             id='ListenButton' class="btn material-icons-sharp" >
+          <input type='text'                           id='TextToSend'   class="btn" >
+          <input type='button' value='keyboard_return' id='SendButton'   class="btn material-icons-sharp" />
+        </div>
+      </div>
+
+
+
     </div>
+
   </body>
+
 </html>

@@ -34,7 +34,7 @@
      inkscape:lockguides="false"
      inkscape:snap-global="false"
      inkscape:zoom="1.985134"
-     inkscape:cx="316.60331"
+     inkscape:cx="316.35144"
      inkscape:cy="123.92111"
      inkscape:window-width="2560"
      inkscape:window-height="1053"
@@ -117,9 +117,9 @@
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect11037);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="688.70117"
          y="478.3457"
-         id="tspan44"><tspan
+         id="tspan750"><tspan
            dx="0 25.996094 24.472656 25.390625 24.511719 16.445312"
-           id="tspan42">Robart</tspan></tspan></text>
+           id="tspan748">Robart</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.8134527,0,0,0.8134527,-554.32513,-319.34391)"
@@ -127,8 +127,8 @@
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect16403);display:inline;fill:#9ae19d;fill-opacity:1;stroke:#537a5a;stroke-width:1.37953;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"><tspan
          x="693.9082"
          y="438.90625"
-         id="tspan48"><tspan
+         id="tspan754"><tspan
            style="font-style:italic;font-weight:bold;-inkscape-font-specification:'sans-serif Bold Italic';paint-order:markers fill stroke"
-           id="tspan46">ROBART</tspan></tspan></text>
+           id="tspan752">R</tspan></tspan></text>
   </g>
 </svg>
