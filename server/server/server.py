@@ -72,6 +72,8 @@ class Server(socketserver.BaseRequestHandler):
             if 'PUT' in method:
                 message = data[header_end + 1:len(data)]
 
+                print('Recived data from', self.client_address)
+
                 # Gets the message as json.
                 json_dict = json.loads(message[0])
 
@@ -80,7 +82,6 @@ class Server(socketserver.BaseRequestHandler):
             else:
                 # Crashes if it gets a response it doesn't like.
                 self.response('503 Service Unavailable', 'This server is not normal.')
-                self.stop()
         except UnicodeDecodeError:
             # Crashes if it gets a response it doesn't like.
             self.response('503 Service Unavailable', 'This server is not normal.')
@@ -97,6 +98,11 @@ class Server(socketserver.BaseRequestHandler):
         for intent in intents:
             if intent['confidence'] > wa_intent[1]:
                 wa_intent = (intent['intent'], intent['confidence'])
+
+        # Indexes
+        index = -1
+        o_index = -1
+        l_index = -1
 
         # Sorts out all entities.
         wa_entities = []
@@ -190,7 +196,7 @@ class Server(socketserver.BaseRequestHandler):
                       wa_intent[0], "-", wa_entities[o_index][1])
             else:
                 # Inform client that there is no object.
-                self.response('409 Conflict', 'No object found.')
+                self.response('409 Conflict', 'Could not determine object.')
 
     # Returns the database row or rows of the item or items that are requested.
     def check_database(self, entites, index):

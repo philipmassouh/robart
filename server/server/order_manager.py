@@ -36,7 +36,10 @@ class OrderManager(threading.Thread):
                         if last > -1:
                             # Gets the item requested.
                             coords = self.database['objects'][data[0]]['entities'][last]['pos']
-                            self.controller.get_at_coords(coords)
+                            self.controller.goto_coords(coords)
+                            self.controller.grab_object()
+                            self.controller.goto_coords(self.controller.home_coords)
+                            self.controller.place_object()
 
                             # Update count object and free space.
                             self.database['objects'][data[0]]['count'] = last
@@ -61,7 +64,9 @@ class OrderManager(threading.Thread):
                             self.database['objects'][name]['entities'] = []
 
                         # Go to place it.
+                        self.controller.grab_object()
                         self.controller.goto_coords(coords)
+                        self.controller.place_object()
 
                         # Add the item to the database.
                         self.database['objects'][name]['count'] += 1

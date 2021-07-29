@@ -1,563 +1,186 @@
+from controllers import RobotController, WebotsRobot
+import numpy as np
 import math as m
-# import time as t
-from abc import ABC, abstractmethod
-try:
-    from webots.controller import Robot
-except Exception:
-    Robot = object
+import time
+import json
 
 
-TIME_STEP = 64
-MAX_WHEEL_SPEED = 15.0
-HALF_WHEEL_SPEED = MAX_WHEEL_SPEED / 2.0
-QUARTER_WHEEL_SPEED = MAX_WHEEL_SPEED / 4.0
-EIGHTH_WHEEL_SPEED = MAX_WHEEL_SPEED / 8.0
-SIXTEENTH_WHEEL_SPEED = MAX_WHEEL_SPEED / 16.0
-WHEELS_DISTANCE = 0.4492
-SUB_WHEELS_DISTANCE = 0.098
-WHEEL_RADIUS = 0.08
-PI_4 = m.pi / 4.0
-
-
-class RobotController:
-
-    def __init__(self, robot, name=None):
-        self.robot = robot(name=name) if name else robot()
-        methods = {method: getattr(self.robot, method) for method in
-                   dir(self.robot) if not method.startswith('_')}
-        self.__dict__.update(methods)
-        self.object_distances = {
-            'obj1': 120,
-            'obj2': 240,
-        }
-        self.placement = 15
-
-    def __getattr__(self, name):
-        return getattr(self.robot, name)
-
-    def get_object_(self, object):
-        self.robot.drive_forward_(self.object_distances[object], 0.5)
-        self.robot.raise_arm_(20, 0.8)
-        self.robot.turn_arm_(-30, 0.8)
-        self.robot.grab_object_()
-        self.robot.turn_arm_(-30, -0.8)
-        self.robot.lower_arm_(20, 0.25)
-        self.robot.store_object_()
-        self.robot.drive_backward_(self.object_distances[object], 0.5)
-        self.robot.place_object_(self.placement)
-        self.placement += 5
-
-
-class AbstractController(ABC):
-
+class Walk:
     def __init__(self):
-        super().__init__()
-
-    @abstractmethod
-    def drive_forward_(self, distance, speed): pass
-
-    @abstractmethod
-    def drive_backward_(self, distance, speed): pass
-
-    @abstractmethod
-    def strafe_right_(self, distance, speed): pass
-
-    @abstractmethod
-    def strafe_left_(self, distance, speed): pass
-
-    @abstractmethod
-    def turn_right_(self, degrees, speed): pass
-
-    @abstractmethod
-    def turn_left_(self, degrees, speed): pass
-
-    @abstractmethod
-    def raise_arm_(self, distance, speed): pass
-
-    @abstractmethod
-    def lower_arm_(self, distance, speed): pass
-
-    @abstractmethod
-    def open_fingers_(self): pass
-
-    @abstractmethod
-    def close_fingers_(self): pass
-
-
-class TextRobot(AbstractController):
-
-    def __init__(self, name='TextBot'):
-        super().__init__()
-
-        self.name = name
-
-    def drive_forward_(self, distance, speed):
-        output = f'{self.name}: Driving forward distance {distance} at speed {speed}'
-        print(output)
-        return output
-
-    def drive_backward_(self, distance, speed):
-        output = f'{self.name}: Driving backward distance {distance} at speed {speed}'
-        print(output)
-        return output
-
-    def strafe_right_(self, distance, speed):
-        output = f'{self.name}: Strafing right distance {distance} at speed {speed}'
-        print(output)
-        return output
-
-    def strafe_left_(self, distance, speed):
-        output = f'{self.name}: Strafing left distance {distance} at speed {speed}'
-        print(output)
-        return output
-
-    def turn_right_(self, degrees, speed):
-        output = f'{self.name}: Turning right {degrees} degrees at speed {speed}'
-        print(output)
-        return output
-
-    def turn_left_(self, degrees, speed):
-        output = f'{self.name}: Turning left {degrees} degrees at speed {speed}'
-        print(output)
-        return output
-
-    def raise_arm_(self, distance, speed):
-        output = f'{self.name}: Raising arm distance {distance} at speed {speed}'
-        print(output)
-        return output
-
-    def lower_arm_(self, distance, speed):
-        output = f'{self.name}: Lowering arm distance {distance} at speed {speed}'
-        print(output)
-        return output
-
-    def open_fingers_(self):
-        output = f'{self.name}: Opening fingers'
-        print(output)
-        return output
-
-    def close_fingers_(self):
-        output = f'{self.name}: Closing fingers'
-        print(output)
-        return output
-
-
-class WebotsRobot(Robot):
-
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
-        self.timestep = int(self.getBasicTimeStep())
-        self.fl_wheel_motors = {
-            'left': self.getDevice('fl_caster_l_wheel_joint'),
-            'right': self.getDevice('fl_caster_r_wheel_joint')
+        self.SIZE = 256
+        self.FIND_OBJECTS = 2
+        self.sku = 0
+        self.world = {
+            'first': [['ground']*self.SIZE]*self.SIZE,
+            'second': [['ground']*self.SIZE]*self.SIZE,
+            'third': [['ground']*self.SIZE]*self.SIZE,
+            'forth': [['ground']*self.SIZE]*self.SIZE,
+            'center': ''
         }
-        self.fl_wheel_sensors = {
-            'left': self.fl_wheel_motors['left'].getPositionSensor(),
-            'right': self.fl_wheel_motors['right'].getPositionSensor()
-        }
-        self.fr_wheel_motors = {
-            'left': self.getDevice('fr_caster_l_wheel_joint'),
-            'right': self.getDevice('fr_caster_r_wheel_joint')
-        }
-        self.fr_wheel_sensors = {
-            'left': self.fr_wheel_motors['left'].getPositionSensor(),
-            'right': self.fr_wheel_motors['right'].getPositionSensor()
-        }
-        self.bl_wheel_motors = {
-            'left': self.getDevice('bl_caster_l_wheel_joint'),
-            'right': self.getDevice('bl_caster_r_wheel_joint')
-        }
-        self.bl_wheel_sensors = {
-            'left': self.bl_wheel_motors['left'].getPositionSensor(),
-            'right': self.bl_wheel_motors['right'].getPositionSensor()
-        }
-        self.br_wheel_motors = {
-            'left': self.getDevice('br_caster_l_wheel_joint'),
-            'right': self.getDevice('br_caster_r_wheel_joint')
-        }
-        self.br_wheel_sensors = {
-            'left': self.br_wheel_motors['left'].getPositionSensor(),
-            'right': self.br_wheel_motors['right'].getPositionSensor()
-        }
-        self.wheel_motors = list(self.fl_wheel_motors.values()) + \
-            list(self.fr_wheel_motors.values()) + \
-            list(self.bl_wheel_motors.values()) + \
-            list(self.br_wheel_motors.values())
-        self.wheel_sensors = list(self.fl_wheel_sensors.values()) + \
-            list(self.fr_wheel_sensors.values()) + \
-            list(self.bl_wheel_sensors.values()) + \
-            list(self.br_wheel_sensors.values())
-        self.rotation_motors = {
-            'front_left': self.getDevice('fl_caster_rotation_joint'),
-            'front_right': self.getDevice('fr_caster_rotation_joint'),
-            'back_left': self.getDevice('bl_caster_rotation_joint'),
-            'back_right': self.getDevice('br_caster_rotation_joint')
-        }
-        self.rotation_sensors = {
-            'front_left': self.rotation_motors['front_left'].getPositionSensor(),
-            'front_right': self.rotation_motors['front_right'].getPositionSensor(),
-            'back_left': self.rotation_motors['back_left'].getPositionSensor(),
-            'back_right': self.rotation_motors['back_right'].getPositionSensor()
-        }
-        self.left_arm_motors = {
-            'shoulder_pan': self.getDevice('l_shoulder_pan_joint'),
-            'shoulder_lift': self.getDevice('l_shoulder_lift_joint'),
-            'upper_roll': self.getDevice('l_upper_arm_roll_joint'),
-            'elbow_flex': self.getDevice('l_elbow_flex_joint'),
-            'wrist_roll': self.getDevice('l_wrist_roll_joint')
-        }
-        self.right_arm_motors = {
-            'shoulder_pan': self.getDevice('r_shoulder_pan_joint'),
-            'shoulder_lift': self.getDevice('r_shoulder_lift_joint'),
-            'upper_roll': self.getDevice('r_upper_arm_roll_joint'),
-            'elbow_flex': self.getDevice('r_elbow_flex_joint'),
-            'wrist_roll': self.getDevice('r_wrist_roll_joint'),
-        }
-        self.left_arm_sensors = {
-            'shoulder_pan': self.left_arm_motors['shoulder_pan'].getPositionSensor(),
-            'shoulder_lift': self.left_arm_motors['shoulder_lift'].getPositionSensor(),
-            'upper_roll': self.left_arm_motors['upper_roll'].getPositionSensor(),
-            'elbow_flex': self.left_arm_motors['elbow_flex'].getPositionSensor(),
-            'wrist_roll': self.left_arm_motors['wrist_roll'].getPositionSensor()
-        }
-        self.right_arm_sensors = {
-            'shoulder_pan': self.right_arm_motors['shoulder_pan'].getPositionSensor(),
-            'shoulder_lift': self.right_arm_motors['shoulder_lift'].getPositionSensor(),
-            'upper_roll': self.right_arm_motors['upper_roll'].getPositionSensor(),
-            'elbow_flex': self.right_arm_motors['elbow_flex'].getPositionSensor(),
-            'wrist_roll': self.right_arm_motors['wrist_roll'].getPositionSensor()
-        }
-        self.left_hand_motors = {
-            'left_finger': self.getDevice('l_gripper_l_finger_joint'),
-            'right_finger': self.getDevice('l_gripper_r_finger_joint'),
-            'left_tip': self.getDevice('l_gripper_l_finger_tip_joint'),
-            'right_tip': self.getDevice('l_gripper_r_finger_tip_joint')
-        }
-        self.right_hand_motors = {
-            'left_finger': self.getDevice('r_gripper_l_finger_joint'),
-            'right_finger': self.getDevice('r_gripper_r_finger_joint'),
-            'left_tip': self.getDevice('r_gripper_l_finger_tip_joint'),
-            'right_tip': self.getDevice('r_gripper_r_finger_tip_joint')
-        }
-        self.body_motors = {
-            'head_tilt': self.getDevice('head_tilt_joint'),
-            'torso_lift': self.getDevice('torso_lift_joint')
-        }
-        self.body_sensors = {
-            'head_tilt': self.body_motors['head_tilt'].getPositionSensor(),
-            'torso_lift': self.body_motors['torso_lift'].getPositionSensor(),
-            'base_laser': self.getDevice('base_laser')
-        }
-        self.cameras = {
-            'left_arm': self.getDevice('l_forearm_cam_sensor'),
-            'right_arm': self.getDevice('r_forearm_cam_sensor'),
-            'left_eye': self.getDevice('wide_stereo_l_stereo_camera_sensor'),
-            'right_eye': self.getDevice('wide_stereo_r_stereo_camera_sensor')
-        }
-        self.left_hand_sensors = {
-            'left_contact': self.getDevice('l_gripper_l_finger_tip_contact_sensor'),
-            'right_contact': self.getDevice('l_gripper_r_finger_tip_contact_sensor'),
-            'left_finger': self.left_hand_motors['left_finger'].getPositionSensor(),
-            'right_finger': self.left_hand_motors['right_finger'].getPositionSensor(),
-            'left_tip': self.left_hand_motors['left_tip'].getPositionSensor(),
-            'right_tip': self.left_hand_motors['right_tip'].getPositionSensor()
-        }
-        self.right_hand_sensors = {
-            'left_contact': self.getDevice('r_gripper_l_finger_tip_contact_sensor'),
-            'right_contact': self.getDevice('r_gripper_r_finger_tip_contact_sensor'),
-            'left_finger': self.right_hand_motors['left_finger'].getPositionSensor(),
-            'right_finger': self.right_hand_motors['right_finger'].getPositionSensor(),
-            'left_tip': self.right_hand_motors['left_tip'].getPositionSensor(),
-            'right_tip': self.right_hand_motors['right_tip'].getPositionSensor()
-        }
-        self.inertial_unit = self.getDevice('inertial unit')
-        self.gps = self.getDevice('gps')
-        self.compass = self.getDevice('compass')
-        self.available_torques = [0.0, ] * 8
-        self.current_coords = [8.0, -1.0]
-        self.home_coords = [8.0, -1.0]
-        self.current_direction = 0
-        self.home_direction = 0
-        self.stored_coords = None
-        self._initialize()
+        self.objects = {}
+        self.robot = RobotController(WebotsRobot, name='Robart')
+        self.cameras = [self.robot.cameras['camera'], self.robot.cameras['left_eye'], self.robot.cameras['right_eye']]
+        self.dim = [
+            (self.cameras[0].getHeight(), self.cameras[0].getWidth()),
+            (self.cameras[1].getHeight(), self.cameras[1].getWidth()),
+            (self.cameras[2].getHeight(), self.cameras[2].getWidth())
+        ]
+        self.cameras[0].recognitionEnable(self.robot.timestep)
+        self.cameras[0].enableRecognitionSegmentation()
 
-    def _initialize(self):
-        for wheel in self.wheel_motors:
-            wheel.setPosition(float('inf'))
-            wheel.setVelocity(0.0)
-        for sensor in self.wheel_sensors:
-            sensor.enable(TIME_STEP)
-        for sensor in self.rotation_sensors.values():
-            sensor.enable(TIME_STEP)
-        for camera in self.cameras.values():
-            camera.enable(TIME_STEP)
-        for sensor in self.left_arm_sensors.values():
-            sensor.enable(TIME_STEP)
-        for sensor in self.right_arm_sensors.values():
-            sensor.enable(TIME_STEP)
-        for sensor in self.left_hand_sensors.values():
-            sensor.enable(TIME_STEP)
-        for sensor in self.right_hand_sensors.values():
-            sensor.enable(TIME_STEP)
-        for sensor in self.body_sensors.values():
-            sensor.enable(TIME_STEP)
-        for camera in self.cameras.values():
-            camera.enable(TIME_STEP)
-            # camera.recognitionEnable(TIME_STEP)
-        self.inertial_unit.enable(TIME_STEP)
-        self.gps.enable(TIME_STEP)
-        self.compass.enable(TIME_STEP)
-        self._set_initial_positions()
-
-    def _set_initial_positions(self):
-        self._toggle_gaze(True, False)
-        self._set_arm_position(True, 0.0, 1.35, 0.0, -2.2, 0.0, False)
-        self._set_arm_position(False, 0.0, 1.35, 0.0, -2.2, 0.0, False)
-        self._toggle_gripper(True, True, 0.0, False)
-        self._toggle_gripper(False, True, 0.0, True)
-
-    def _wait_for_time(self, time):
-        step = 0
-        while self.step(self.timestep) != -1 and step < time:
-            step += 1
-
-    def _set_wheels_speeds(self, fll, flr, frl, frr, bll, blr, brl, brr):
-        self.fl_wheel_motors['left'].setVelocity(fll)
-        self.fl_wheel_motors['right'].setVelocity(flr)
-        self.fr_wheel_motors['left'].setVelocity(frl)
-        self.fr_wheel_motors['right'].setVelocity(frr)
-        self.bl_wheel_motors['left'].setVelocity(bll)
-        self.bl_wheel_motors['right'].setVelocity(blr)
-        self.br_wheel_motors['left'].setVelocity(brl)
-        self.br_wheel_motors['right'].setVelocity(brr)
-
-    def _set_wheels_speed(self, speed):
-        self._set_wheels_speeds(*((speed,) * 8))
-
-    def _stop_wheels(self):
-        self._set_wheels_speeds(*((0.0,) * 8))
-
-    def _toggle_passive_wheels(self, enable):
-        if enable:
-            for index, wheel in enumerate(self.wheel_motors):
-                self.available_torques[index] = wheel.getAvailableTorque()
-                wheel.setAvailableTorque(0.0)
+    # Returns the image or a specific color of the image.
+    def getImage(self, device, rgba=-1):
+        if rgba > -1 and rgba < 4:
+            return self.getImage(device)[:,:,rgba]
         else:
-            for index, wheel in enumerate(self.wheel_motors):
-                wheel.setAvailableTorque(self.available_torques[index])
+            # Numpy array of the current image.
+            return np.frombuffer(self.cameras[device].getImage(), dtype=np.uint8).reshape(self.dim[device][0], self.dim[device][1], 4)
 
-    def _set_wheels_rotation(self, fl, fr, bl, br, wait):
-        if wait:
-            self._stop_wheels()
-            self._toggle_passive_wheels(True)
-        self.rotation_motors['front_left'].setPosition(fl)
-        self.rotation_motors['front_right'].setPosition(fr)
-        self.rotation_motors['back_left'].setPosition(bl)
-        self.rotation_motors['back_right'].setPosition(br)
-        if wait:
-            target = [fl, fr, bl, br]
-            targets_reached = False
-            while not targets_reached:
-                for index, sensor in enumerate(self.rotation_sensors.values()):
-                    current_position = sensor.getValue()
-                    if abs(current_position - target[index]) < 0.05:
-                        targets_reached = True
-                self.step(self.timestep)
-            self._toggle_passive_wheels(False)
+    def catalog(self):
+        # Saves an image of what the robot sees.
+        #self.cameras[0].getRecognitionSegmentationImage()
+        #self.cameras[0].saveRecognitionSegmentationImage("tester.png", 100)
 
-    def _robot_rotate(self, angle, speed):
-        self._stop_wheels()
-        self._set_wheels_rotation(3.0 * PI_4, PI_4, -3.0 * PI_4, -PI_4, True)
-        wheel_speed = speed if angle > 0 else -speed
-        current_orientation = self.inertial_unit.getRollPitchYaw()[2]
-        target_orientation = current_orientation + angle
-        if target_orientation > m.pi:
-            target_orientation = -m.pi + (target_orientation - m.pi) + 0.025
-        elif target_orientation < -m.pi:
-            target_orientation = m.pi - (-m.pi - target_orientation) - 0.025
-        self._set_wheels_speed(wheel_speed)
-        while abs(target_orientation - current_orientation) > 0.005:
-            current_orientation = self.inertial_unit.getRollPitchYaw()[2]
-            if abs(target_orientation - current_orientation) < 0.05:
-                self._set_wheels_speed(wheel_speed / 16.0)
-            self.step(self.timestep)
-        self._stop_wheels()
-        self.step(self.timestep)
-        self._set_wheels_rotation(*((0.0,) * 4), True)
+        self.robot._set_wheels_rotation(3.0 * m.pi / 4.0, m.pi / 4.0, -3.0 * m.pi / 4.0, -m.pi / 4.0, True)
+        self.robot._set_wheels_speed(10)
 
-    def _face_direction(self, direction):
-        if direction == 0:
-            if self.current_direction == 1:
-                self.turn_right()
-            elif self.current_direction == 2:
-                self.turn_around()
-            elif self.current_direction == 3:
-                self.turn_left()
-        elif direction == 1:
-            if self.current_direction == 0:
-                self.turn_left()
-            elif self.current_direction == 2:
-                self.turn_right()
-            elif self.current_direction == 3:
-                self.turn_around()
-        elif direction == 2:
-            if self.current_direction == 0:
-                self.turn_around()
-            elif self.current_direction == 1:
-                self.turn_left()
-            elif self.current_direction == 3:
-                self.turn_right()
-        else:
-            if self.current_direction == 0:
-                self.turn_right()
-            elif self.current_direction == 1:
-                self.turn_around()
-            elif self.current_direction == 2:
-                self.turn_left()
+        time.sleep(2)
 
-    def _set_arm_position(self, left, shoulder_pan, shoulder_lift,
-                          upper_roll, elbow_flex, wrist_roll, wait):
-        if left:
-            motors = self.left_arm_motors
-            sensors = self.left_arm_sensors
-        else:
-            motors = self.right_arm_motors
-            sensors = self.right_arm_sensors
-        motors['shoulder_pan'].setPosition(shoulder_pan)
-        motors['shoulder_lift'].setPosition(shoulder_lift)
-        motors['upper_roll'].setPosition(upper_roll)
-        motors['elbow_flex'].setPosition(elbow_flex)
-        motors['wrist_roll'].setPosition(wrist_roll)
-        for motor in motors.values():
-            motor.setVelocity(1.5)
-        motors['elbow_flex'].setVelocity(2.5)
-        if wait:
-            while abs(sensors['shoulder_pan'].getValue() - shoulder_pan) > 0.05 or \
-                    abs(sensors['shoulder_lift'].getValue() - shoulder_lift) > 0.05 or \
-                    abs(sensors['upper_roll'].getValue() - upper_roll) > 0.05 or \
-                    abs(sensors['elbow_flex'].getValue() - elbow_flex) > 0.05 or \
-                    abs(sensors['wrist_roll'].getValue() - wrist_roll) > 0.05:
-                self.step(self.timestep)
+        i = 0
+        while i < self.FIND_OBJECTS:
+            # Takes a step in the sim.
+            self.robot.step(self.robot.timestep)
 
-    def _toggle_gripper(self, left, open, torque, wait):
-        if left:
-            motors = self.left_hand_motors
-            sensors = self.left_hand_sensors
-        else:
-            motors = self.right_hand_motors
-            sensors = self.right_hand_sensors
-        maxTorque = motors['left_finger'].getAvailableTorque()
-        for motor in motors.values():
-            motor.setAvailableTorque(maxTorque)
-        if open:
-            targetValue = 0.5
-            for motor in motors.values():
-                motor.setPosition(targetValue)
-            while wait and abs(sensors['left_finger'].getValue() - targetValue) > 0.05:
-                self.step(self.timestep)
-        else:
-            targetValue = 0.0
-            for motor in motors.values():
-                motor.setPosition(targetValue)
-            while wait and (sensors['left_contact'].getValue() < 0.5 or
-                            sensors['right_contact'].getValue() < 0.5) and \
-                    abs(sensors['left_finger'].getValue() - targetValue) > 0.05:
-                self.step(self.timestep)
-            current_position = sensors['left_finger'].getValue()
-            for motor in motors.values():
-                motor.setAvailableTorque(torque)
-                motor.setPosition(max(0.0, 0.95 * current_position))
+            # Loops through all objects and checks if it knows about them.
+            for obj in self.cameras[0].getRecognitionObjects():
+                # Calculates object position and color.
+                color = obj.get_colors()
+                object_pos_cam = np.add(np.array(obj.get_position()), np.array([0.10789, 0, 0.12197]))
+                object_pos_wrd = np.around(np.subtract(np.array(self.robot.gps.getValues()), object_pos_cam)).astype(np.int32).tolist()
+                object_name = obj.get_model().decode("utf-8")
 
-    def _toggle_gaze(self, down, wait):
-        if down:
-            target_position = 0.5
-        else:
-            target_position = 0.0
-        self.body_motors['head_tilt'].setPosition(target_position)
-        while wait and abs(self.body_sensors['head_tilt'].getValue() - target_position) > 0.05:
-            self.step(self.timestep)
+                # Determinds the object found based on color.
+                if color[0] == 1 and self.get_object(object_pos_wrd) != 'wall':
+                    self.add_object((object_pos_wrd, 'wall'))
+                elif color[1] == 1 and (len(self.get_object(object_pos_wrd)) == 0 or (len(self.get_object(object_pos_wrd)) == 2 and object_name not in self.get_object(object_pos_wrd)[1])):
+                    # Adds object to world and objects dict.
+                    self.add_object((object_pos_wrd, ('table', [object_name])))
 
-    def turn_left(self, speed=EIGHTH_WHEEL_SPEED):
-        self._robot_rotate(m.pi / 2.0, speed)
-        self.current_direction += 1
-        if self.current_direction > 3:
-            self.current_direction = 0
+                    # Initializes model if it has not found it yet.
+                    if object_name not in self.objects:
+                        self.objects[object_name] = {'count': 0, 'entities': []}
 
-    def turn_right(self, speed=EIGHTH_WHEEL_SPEED):
-        self._robot_rotate(-m.pi / 2.0, speed)
-        self.current_direction -= 1
-        if self.current_direction < 0:
-            self.current_direction = 3
+                    # Updates object values.
+                    self.objects[object_name]['count'] += 1
+                    self.objects[object_name]['entities'].append({'pos': [object_pos_wrd[0], object_pos_wrd[2]], 'sku': self.sku})
+                    self.sku += 1
 
-    def turn_around(self, speed=EIGHTH_WHEEL_SPEED):
-        self._robot_rotate(m.pi, speed)
-        if self.current_direction == 0:
-            self.current_direction = 2
-        elif self.current_direction == 2:
-            self.current_direction = 0
-        elif self.current_direction == 1:
-            self.current_direction = 3
-        elif self.current_direction == 3:
-            self.current_direction = 1
+                    # Found an object.
+                    i += 1
 
-    def drive(self, distance, speed=HALF_WHEEL_SPEED):
-        initial_wheel_position = self.fl_wheel_sensors['left'].getValue()
-        wheel_travel_distane = 0
-        alignment = self.gps.getValues()[0] \
-            if self.current_direction in (0, 2) else self.gps.getValues()[2]
-        wheel_speed = speed if distance > 0 else -speed
-        self._set_wheels_speed(wheel_speed)
-        if self.current_direction == 0:
-            current_position = self.current_coords[1]
-            target_position = self.current_coords[1] - distance
-        elif self.current_direction == 2:
-            current_position = self.current_coords[1]
-            target_position = self.current_coords[1] + distance
-        elif self.current_direction == 1:
-            current_position = self.current_coords[0]
-            target_position = self.current_coords[0] - distance
-        elif self.current_direction == 3:
-            current_position = self.current_coords[0]
-            target_position = self.current_coords[0] + distance
-        while abs(target_position - current_position) > 0.0025:
-            lidar = robot.body_sensors["base_laser"]
-            print(dir(lidar), lidar.getFov(), sep='\n')
-            break
-            wheel_position = self.fl_wheel_sensors['left'].getValue()
-            wheel_travel_distane = abs(WHEEL_RADIUS * (wheel_position - initial_wheel_position))
-            if self.current_direction == 0:
-                if self.gps.getValues()[0] > alignment:
-                    self._set_wheels_rotation(0.025, 0.025, 0.0, 0.0, False)
+                elif color[0] == 0.5 and len(self.get_object(object_pos_wrd)) != 2:
+                    self.add_object((object_pos_wrd, ('table', [])))
+
+        # Saves the objects found into the database.
+        self.robot._set_wheels_speed(0)
+        self.save_database()
+
+    # Saves the database.
+    def save_database(self):
+        database = {
+            'freeSpace': [],
+            'nextSKU': self.sku + 1,
+            'objects': self.objects,
+            'table': []
+        }
+
+        with open('./server/server/data.json', 'w') as outfile:
+            json.dump(database, outfile, indent=4)
+            outfile.close()
+
+
+    # Adds an object to the world.
+    def add_object(self, obj):
+        x = obj[0][0]
+        z = obj[0][2]
+
+        # Prevent out of bounds errors.
+        if np.abs(x) > self.SIZE or np.abs(z) > self.SIZE:
+            return -1
+
+        # Updates item in world.
+        if x > 0 and z > 0:
+            if type(obj[1]) is tuple:
+                if len(self.world['first'][x][z]) == 2:
+                    if len(obj[1][1][0]) != 0:
+                        self.world['first'][x][z][1].append(obj[1][1][0])
                 else:
-                    self._set_wheels_rotation(-0.025, -0.025, 0.0, 0.0, False)
-                current_position = self.gps.getValues()[2]
-            elif self.current_direction == 2:
-                if self.gps.getValues()[0] < alignment:
-                    self._set_wheels_rotation(0.025, 0.025, 0.0, 0.0, False)
+                    self.world['first'][x][z] = obj[1]
+            else:
+                self.world['first'][x][z] = obj[1]
+        elif x < 0 and z > 0:
+            if type(obj[1]) is tuple:
+                if len(self.world['second'][-x][z]) == 2:
+                    if len(obj[1][1][0]) != 0:
+                        self.world['second'][-x][z][1].append(obj[1][1][0])
                 else:
-                    self._set_wheels_rotation(-0.025, -0.025, 0.0, 0.0, False)
-                current_position = self.gps.getValues()[2]
-            elif self.current_direction == 1:
-                if self.gps.getValues()[2] < alignment:
-                    self._set_wheels_rotation(0.025, 0.025, 0.0, 0.0, False)
+                    self.world['second'][-x][z] = obj[1]
+            else:
+                self.world['second'][-x][z] = obj[1]
+        elif x < 0 and z < 0:
+            if type(obj[1]) is tuple:
+                if len(self.world['third'][-x][-z]) == 2:
+                    if len(obj[1][1][0]) != 0:
+                        print(self.world['third'][-x][-z][1])
+                        self.world['third'][-x][-z][1].append(obj[1][1][0])
                 else:
-                    self._set_wheels_rotation(-0.025, -0.025, 0.0, 0.0, False)
-                current_position = self.gps.getValues()[0]
-            elif self.current_direction == 3:
-                if self.gps.getValues()[2] > alignment:
-                    self._set_wheels_rotation(0.025, 0.025, 0.0, 0.0, False)
+                    self.world['third'][-x][-z] = obj[1]
+            else:
+                self.world['third'][-x][-z] = obj[1]
+        elif x > 0 and z < 0:
+            if type(obj[1]) is tuple:
+                if len(self.world['forth'][x][-z]) == 2:
+                    if len(obj[1][1][0]) != 0:
+                        self.world['forth'][x][-z][1].append(obj[1][1][0])
                 else:
-                    self._set_wheels_rotation(-0.025, -0.025, 0.0, 0.0, False)
-                current_position = self.gps.getValues()[0]
-            if abs(distance) - wheel_travel_distane < 0.1:
-                self._set_wheels_speed(wheel_speed / 16.0)
-            self.step(self.timestep)
-        self._stop_wheels()
-        self.current_coords = [self.gps.getValues()[0]] + [self.gps.getValues()[2]]
+                    self.world['forth'][x][-z] = obj[1]
+            else:
+                self.world['forth'][x][-z] = obj[1]
+        elif x == 0 and z == 0:
+            if type(obj[1]) is tuple:
+                if len(self.world['center']) == 2:
+                    if len(obj[1][1][0]) != 0:
+                        self.world['center'][1].append(obj[1][1][0])
+                else:
+                    self.world['center'] = obj[1]
+            else:
+                self.world['center'] = obj[1]
+        else:
+            return -1
 
-if __name__ == '__main__':
-    robot = RobotController(WebotsRobot, name='Robart')
-    robot._robot_rotate(-m.pi / 2.0, EIGHTH_WHEEL_SPEED)
-    robot.drive(20)
- 
+        return 0
+
+    # Returns the object in the requested pos.
+    def get_object(self, pos):
+        x = pos[0]
+        z = pos[2]
+
+        # Prevent out of bounds errors.
+        if np.abs(x) > self.SIZE or np.abs(z) > self.SIZE:
+            return 'ground'
+
+        if x > 0 and z > 0:
+            return self.world['first'][x][z]
+        elif x < 0 and z > 0:
+            return self.world['second'][-x][z]
+        elif x < 0 and z < 0:
+            return self.world['third'][-x][-z]
+        elif x > 0 and z < 0:
+            return self.world['forth'][x][-z]
+        else:
+            return self.world['center']
+        
+
+if __name__ == "__main__":
+    walk = Walk()
+    walk.catalog()

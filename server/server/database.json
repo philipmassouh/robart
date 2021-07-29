@@ -1,6 +1,6 @@
 {
     "freeSpace": [],
-    "nextSKU": 18,
+    "nextSKU": 19,
     "objects": {
         "apple": {
             "count": 1,
@@ -206,7 +206,7 @@
                         -2,
                         5
                     ],
-                    "sku": "00000000000E"
+                    "sku": "00000000000i"
                 }
             ]
         },

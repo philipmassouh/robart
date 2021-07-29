@@ -1,0 +1,31 @@
+{
+    "freeSpace": [],
+    "nextSKU": 3,
+    "objects": {
+        "apple": {
+            "count": 1,
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        -1
+                    ],
+                    "sku": 0
+                }
+            ]
+        },
+        "water": {
+            "count": 1,
+            "entities": [
+                {
+                    "pos": [
+                        -2,
+                        -1
+                    ],
+                    "sku": 1
+                }
+            ]
+        }
+    },
+    "table": []
+}

@@ -242,17 +242,20 @@ class WebotsRobot(Robot):
         }
         self.body_motors = {
             'head_tilt': self.getDevice('head_tilt_joint'),
-            'torso_lift': self.getDevice('torso_lift_joint')
+            'torso_lift': self.getDevice('torso_lift_joint'),
+            'laser_tilt': self.getDevice('laser_tilt_mount_joint')
         }
         self.body_sensors = {
             'head_tilt': self.body_motors['head_tilt'].getPositionSensor(),
-            'torso_lift': self.body_motors['torso_lift'].getPositionSensor()
+            'torso_lift': self.body_motors['torso_lift'].getPositionSensor(),
+            'lidar': self.getDevice('laser_tilt')
         }
         self.cameras = {
             'left_arm': self.getDevice('l_forearm_cam_sensor'),
             'right_arm': self.getDevice('r_forearm_cam_sensor'),
             'left_eye': self.getDevice('wide_stereo_l_stereo_camera_sensor'),
-            'right_eye': self.getDevice('wide_stereo_r_stereo_camera_sensor')
+            'right_eye': self.getDevice('wide_stereo_r_stereo_camera_sensor'),
+            'camera': self.getDevice('high_def_sensor')
         }
         self.left_hand_sensors = {
             'left_contact': self.getDevice('l_gripper_l_finger_tip_contact_sensor'),
@@ -315,6 +318,7 @@ class WebotsRobot(Robot):
         self._set_arm_position(False, 0.0, 1.35, 0.0, -2.2, 0.0, False)
         self._toggle_gripper(True, True, 0.0, False)
         self._toggle_gripper(False, True, 0.0, True)
+        self._toggle_gaze(False, False)
 
     def _wait_for_time(self, time):
         step = 0
@@ -472,7 +476,7 @@ class WebotsRobot(Robot):
         if down:
             target_position = 0.5
         else:
-            target_position = 0.0
+            target_position = 0.1
         self.body_motors['head_tilt'].setPosition(target_position)
         while wait and abs(self.body_sensors['head_tilt'].getValue() - target_position) > 0.05:
             self.step(self.timestep)
