@@ -1,5 +1,7 @@
+import argparse
 import json
 import math as m
+import os
 from abc import ABC, abstractmethod
 try:
     from webots.controller import Robot
@@ -109,12 +111,16 @@ class TextRobot(AbstractRobot):
         print(output)
         return output
 
+    def recognizable_count(self):
+        output = f'{self.name}: No objects to return'
+        return 0
+
 
 class WebotsRobot(AbstractRobot, Robot):
 
     def __init__(self, home_coords):
         super().__init__()
-        self.coords = self.home_coords = home_coords
+        self.coords = self.home = home_coords
         self.direction = self.home_direction = 0
         self.available_torques = [0.0, ] * 8
         self.timestep = int(self.getBasicTimeStep())
@@ -134,6 +140,7 @@ class WebotsRobot(AbstractRobot, Robot):
         self.hand_sensors = self.s['hand_sensors']
         self.head_tilt_sensor = self.s['body_sensors']['head_tilt']
         self.torso_lift_sensor = self.s['body_sensors']['torso_lift']
+        self.lidar = self.s['body_sensors']['lidar']
         self.compass = self.s['body_sensors']['compass']
         self.gps = self.s['body_sensors']['gps']
         self.inertial_unit = self.s['body_sensors']['inertial_unit']
@@ -157,6 +164,7 @@ class WebotsRobot(AbstractRobot, Robot):
             for key, value in sensors.items():
                 sensors[key] = self.getDevice(value)
                 sensors[key].enable(self.timestep)
+        s['camera_sensors']['l_eye'].recognitionEnable(self.timestep)
         for name, motors in self.m.items():
             name = name.split('_')[0] + '_sensors'
             s[name] = {} if name not in s.keys() else s[name]
@@ -171,11 +179,6 @@ class WebotsRobot(AbstractRobot, Robot):
         self._set_arm_position(False, 0.0, 1.35, 0.0, -2.2, 0.0, wait=True)
         self._set_hand_closed(True, False, wait=False)
         self._set_hand_closed(False, False, wait=True)
-
-    def _wait(self, time):
-        step = 0
-        while self.step(self.timestep) != -1 and step < time:
-            step += 1
 
     def _set_motors_positions(self, motors, positions, torque=None):
         if not torque:
@@ -282,6 +285,11 @@ class WebotsRobot(AbstractRobot, Robot):
         position = self.coords[axis]
         return position, position + distance
 
+    def sleep(self, time):
+        step = 0
+        while self.step(self.timestep) != -1 and step < time:
+            step += 1
+
     def set_gaze_down(self, down, wait=True):
         target = 0.5 if down else 0.0
         self.head_tilt_motor.setPosition(target)
@@ -333,17 +341,17 @@ class WebotsRobot(AbstractRobot, Robot):
     def pick_object(self, distance=0.1995, speed=WHEEL_SPEED['quarter']):
         self._set_arm_position(True, 0.0, 1.1, 0.0, -1.1, 0.0)
         self.drive(distance, speed)
-        self._wait(25)
+        self.sleep(25)
         self._set_hand_closed(True, True)
-        self._wait(25)
+        self.sleep(25)
         self._set_arm_position(True, 0.0, 0.85, 0.0, -1.25, 0.0, True)
         self.drive(-distance, speed)
 
     def place_object(self, distance=0.195, speed=WHEEL_SPEED['quarter']):
         self.drive(distance, speed)
-        self._wait(25)
+        self.sleep(25)
         self._set_arm_position(True, 0.0, 1.1, 0.0, -1.11, 0.0)
-        self._wait(25)
+        self.sleep(25)
         self._set_hand_closed(True, False)
         self.drive(-distance, speed)
         self._set_arm_position(True, 0.0, 1.35, 0.0, -2.2, 0.0)
@@ -351,21 +359,27 @@ class WebotsRobot(AbstractRobot, Robot):
     def goto_coords(self, coords, speed=WHEEL_SPEED['half']):
         self.set_gaze_down(False)
         if far(self.coords[1], coords[1], 0.125):
-            self.face_direction(1 if self.coords[0] > 6.0 else 3)
-            self.drive(abs(self.coords[0] - 6.0), speed)
+            if far(self.coords[0], self.home[0], 0.125):
+                self.face_direction(1 if self.coords[0] > self.home[0] else 3)
+                self.drive(abs(self.coords[0] - self.home[0]), speed)
             self.face_direction(0 if self.coords[1] > coords[1] else 2)
             self.drive(abs(self.coords[1] - coords[1]), speed)
-        self.face_direction(1 if self.coords[0] > coords[0] else 3)
-        self.drive(abs(self.coords[0] - coords[0]), speed)
-        self.face_direction(0 if coords == self.home_coords else 2)
+        if far(self.coords[0], coords[0], 0.125):
+            self.face_direction(1 if self.coords[0] > coords[0] else 3)
+            self.drive(abs(self.coords[0] - coords[0]), speed)
+        self.face_direction(0 if coords == self.home else 2)
         self.set_gaze_down(True)
+
+    def recognizable_count(self):
+        return self.camera_sensors['l_eye'].getRecognitionNumberOfObjects()
 
 
 class RobotController:
 
-    def __init__(self, robot: AbstractRobot, home_coords):
+    def __init__(self, robot: AbstractRobot, home_coords, name='Robart'):
         self.robot = robot(home_coords=home_coords)
         self.home_coords = home_coords
+        self.name = name
         methods = {method: getattr(self.robot, method) for method in dir(
             self.robot) if not method.startswith('_')}
         self.__dict__.update(methods)
@@ -375,7 +389,9 @@ class RobotController:
         return getattr(self.robot, name)
 
     def return_item(self, return_home=True):
-        if self.stored_coords:
+        num_recognizables = self.robot.recognizable_count()
+        if num_recognizables > 0:
+            print(f'{self.name}: {num_recognizables} item(s) must be returned')
             self.pick_object()
             self.goto_coords(self.stored_coords)
             self.place_object()
@@ -383,7 +399,7 @@ class RobotController:
                 self.goto_coords(self.home_coords)
             self.stored_coords = None
         else:
-            print('Robart: Nothing to return :(')
+            print(f'{self.name}: No items must be returned :)')
 
     def get_at_coords(self, coords):
         self.return_item(False)
@@ -414,8 +430,15 @@ if __name__ == '__main__':
         'trash': [-5, 5],
         'duck': [4, 7]
     }
-    # robot = RobotController(WebotsRobot, home_coords=(8.0, -1.0))
-    # robot.get_at_coords(library['water'])
-    # robot.get_at_coords(library['extinguisher'])
-    # robot.get_at_coords(library['bottle'])
-    # robot.return_item()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--n', help='Robot name')
+    parser.add_argument('-x', '--x', help='X coordinate')
+    parser.add_argument('-y', '--y', help='Y coordinate')
+    parser.add_argument('-i', '--i', nargs='+', help='Target items')
+    args = parser.parse_args()
+    home_coords = (float(args.x), float(args.y))
+    robot = RobotController(TextRobot, home_coords=home_coords, name=args.n)
+    for item in args.i:
+        print(f'{args.n}: Getting {item}')
+        robot.get_at_coords(library[item])
+    robot.sleep(1000000000)
