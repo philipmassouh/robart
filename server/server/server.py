@@ -32,8 +32,10 @@ class Server(socketserver.BaseRequestHandler):
     def webots_search(self):
         started = False
         # Check if webots is running. Takes a moment.
-        r = os.popen('tasklist /v').read().strip().split('\n')  # Gets all running exes.
-        for i in range(len(r)):                                 # Loops through all exes.
+        # Gets all running exes.
+        r = os.popen('tasklist /v').read().strip().split('\n')
+        # Loops through all exes.
+        for i in range(len(r)):
             if "webotsw.exe" in r[i]:
                 started = True
                 break
@@ -41,7 +43,8 @@ class Server(socketserver.BaseRequestHandler):
         # Opens webots if it wasn't running.
         if not started:
             # Webots location and world.
-            webots = os.environ.get('WEBOTS_HOME') + "/msys64/mingw64/bin/webotsw.exe"
+            webots = os.environ.get('WEBOTS_HOME') + \
+                "/msys64/mingw64/bin/webotsw.exe"
             world = os.getcwd() + "./assets/worlds/warehouse.wbt"
 
             # Opens webots.
@@ -79,11 +82,13 @@ class Server(socketserver.BaseRequestHandler):
                 self.generate_command(json_dict)
             else:
                 # Crashes if it gets a response it doesn't like.
-                self.response('503 Service Unavailable', 'This server is not normal.')
+                self.response('503 Service Unavailable',
+                              'This server is not normal.')
                 self.stop()
         except UnicodeDecodeError:
             # Crashes if it gets a response it doesn't like.
-            self.response('503 Service Unavailable', 'This server is not normal.')
+            self.response('503 Service Unavailable',
+                          'This server is not normal.')
             self.stop()
 
     # Gets intent, descriptors, location and the object.
@@ -129,12 +134,15 @@ class Server(socketserver.BaseRequestHandler):
                     # Ensures one object and one location.
                     if (entity_nam == 'object' or entity_nam == 'SKU') and o_index != -1:
                         if entity_con > wa_entities[o_index][2]:
-                            wa_entities[o_index] = (entity_nam, entity_val, entity_con)
+                            wa_entities[o_index] = (
+                                entity_nam, entity_val, entity_con)
                     elif entity_nam == 'location' and l_index != -1:
                         if entity_con > wa_entities[l_index][2]:
-                            wa_entities[l_index] = (entity_nam, entity_val, entity_con)
+                            wa_entities[l_index] = (
+                                entity_nam, entity_val, entity_con)
                     else:
-                        wa_entities.append((entity_nam, entity_val, entity_con))
+                        wa_entities.append(
+                            (entity_nam, entity_val, entity_con))
             else:
                 if entity_con > wa_entities[i][2]:
                     wa_entities[i] = (entity_nam, entity_val, entity_con)
@@ -172,13 +180,15 @@ class Server(socketserver.BaseRequestHandler):
                         self.response("200 OK", res)
                     else:
                         # Send alternatives.
-                        res = 'Could not determine object.\r\n' + '\r\n'.join(to_get)
+                        res = 'Could not determine object.\r\n' + \
+                            '\r\n'.join(to_get)
                         self.response("409 Conflict", res)
                 else:
                     # Sends put order.
                     self.om.add_order((
                         'put',
-                        (wa_entities[o_index][1], {'pos': [0.0, 0.0], 'sku': '000000000000'}, 1)
+                        (wa_entities[o_index][1], {
+                         'pos': [0.0, 0.0], 'sku': '000000000000'}, 1)
                     ))
 
                     # Inform the client that all is well then put the item.
@@ -219,7 +229,8 @@ class Server(socketserver.BaseRequestHandler):
 
     # Sends the client a HTTP response.
     def response(self, code, message='All good.'):
-        self.request.send(bytes("HTTP/1.1 " + code + '\r\n\n' + message + '\r\n', 'utf-8'))
+        self.request.send(
+            bytes("HTTP/1.1 " + code + '\r\n\n' + message + '\r\n', 'utf-8'))
 
     # Stops the server.
     def stop(self):

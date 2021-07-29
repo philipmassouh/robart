@@ -414,8 +414,8 @@ if __name__ == '__main__':
         'trash': [-5, 5],
         'duck': [4, 7]
     }
-    robot = RobotController(WebotsRobot, home_coords=(8.0, -1.0))
-    robot.get_at_coords(library['water'])
-    robot.get_at_coords(library['extinguisher'])
-    robot.get_at_coords(library['bottle'])
-    robot.return_item()
+    # robot = RobotController(WebotsRobot, home_coords=(8.0, -1.0))
+    # robot.get_at_coords(library['water'])
+    # robot.get_at_coords(library['extinguisher'])
+    # robot.get_at_coords(library['bottle'])
+    # robot.return_item()
