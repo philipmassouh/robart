@@ -73,9 +73,10 @@ function onEvent(name, event) {
 function server_res(data, code) {
     if (code == '409') {
         if (data.includes('No object found.')) {
-            chat.watsonChat("Sorry I couldn't determind the item you were looking for, try rephrasing your statment.", [], -1)
+            console.log("object not found")
+            chat.watsonChat("Sorry I couldn't determine the item you were looking for, try rephrasing your statment.", [], -1)
         }
-        else if (data.includes('Could not determind object.')) {
+        else if (data.includes('Could not determine object.')) {
             text_d = new TextDecoder().decode(data)
             options = text_d.split('\r\n')
             chat.watsonChat("Hmm, that search returned multiple results. Which is it?", options.slice(1, options.length - 1), 3)
@@ -83,6 +84,7 @@ function server_res(data, code) {
     } else if (code == '200') {
         chat.watsonChat(new TextDecoder().decode(data), [], 0)
     }
+    console.log(code)
 }
 
 /**

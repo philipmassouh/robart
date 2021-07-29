@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns='http://www.w3.org/1999/xhtml'>
+<html class="dark" xmlns='http://www.w3.org/1999/xhtml'>
 
   <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
@@ -10,45 +10,42 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
   </head>
 
-
   <body>
-    <!-- HEADER -->
-    <div class="header">
-      <!-- TODO: figure out why svg isnt working -->
-      <div> <img src="assets/robart.png"> </img> </div>
-      <div id="prompt">
-        <div>
-          <input class="btn" id="hostInput" type="password" value="localhost"/>
-          <input class="btn" type='button' value='Confirm' onclick='connect()'/>
-        </div>
-      </div>
-    </div>
 
-
-
-    <!-- MAIN -->
     <div id="main">
 
-      <div id="chat">
-        <div id="chatbox">
-          <div class="robart"> Hi, I'm Robart, your warehouse management assistant! 
-            You can give me a command using your microphone or by typing in the chat
-            below! 
-          </div>
-        </div>
+
+
+      <!-- -------------------------------------------------------------------------------------------------------
         
-        <div id='inputBar'>
-          <input id='ListenButton' type='button' onclick='start_listening()'
-                  class="material-icons-sharp" value='mic' 
-                  style="height: 28px; position: relative;"/>
-          <input id='TextToSend' class="btn" type='text'/>
-          <input id='SendButton' type='button' onclick='send()' 
-                  class="material-icons-sharp" value='keyboard_return' 
-                  style="height: 28px; width: 50px; position: relative; margin-right: 35px;"/>
+              SIDEBAR  
+      
+      -->
+      <div id="sidebar">
+        <div class="buttonGroup">
+          <input type='button' value='home'          class="btn btn__color material-icons-sharp"/>
+        </div>
+
+        <div class="buttonGroup">
+          <input type='button' value='smart_toy'     class="btn btn__color material-icons-sharp" id="robart"/>
+          <input type='button' value='inventory_2'   class="btn btn__color material-icons-sharp" id="inventory"/> 
+          <input type='button' value='help'          class="btn btn__color material-icons-sharp" id="help"/>
+        </div>
+
+        <div class="buttonGroup">
+          <input type='button' value='exit_to_app'   class="btn btn__color material-icons-sharp" id="closeButton"/> 
         </div>
       </div>
 
-      <div id='playerDiv'>
+
+
+      <!-- --------------------------------------------------------------------------------------------------------
+
+              PLAYER DIV 
+
+      -->
+      <div class='middleDiv' id='playerDiv'>
+        <div id='playerHeader'>  </div>
         <script src='https://code.jquery.com/jquery-3.1.1.min.js' 
         integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=' crossorigin='anonymous'></script>
         <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js' 
@@ -59,6 +56,172 @@
         <script src='./wwi/webots.min.js'></script>
         <script src='./scripts/index.js'></script>
       </div>
+
+
+
+      <!-- --------------------------------------------------------------------------------------------------------
+
+              INVENTORY DIV 
+
+      -->
+      <div class='middleDiv' id='inventoryDiv'>
+          <table id='database'>
+            <tr>
+              <th> Item </th>
+              <th> Quantity </th>
+              <th> Description </th>
+              <th> Position </th>
+              <th> SKU </th>
+            </tr>
+            <tr>
+              <td>apple</td>
+            </tr>
+            <tr>
+              <td>bottle</td>
+            </tr>
+            <tr>
+              <td>can</td>
+            </tr>
+            <tr>
+              <td>cereal</td>
+            </tr>
+            <tr>
+              <td>cracker</td>
+            </tr>
+            <tr>
+              <td>cup</td>
+            </tr>
+            <tr>
+              <td>duck</td>
+            </tr>
+            <tr>
+              <td>extinguisher</td>
+            </tr>
+            <tr>
+              <td>flower</td>
+            </tr>
+            <tr>
+              <td>gnome</td>
+            </tr>
+            <tr>
+              <td>honey</td>
+            </tr>
+            <tr>
+              <td>jam</td>
+            </tr>
+            <tr>
+              <td>orange</td>
+            </tr>
+            <tr>
+              <td>paint</td>
+            </tr>
+            <tr>
+              <td>trash</td>
+            </tr>
+            <tr>
+              <td>tree</td>
+            </tr>
+            <tr>
+              <td>water</td>
+            </tr>
+          </table>
+      </div>
+
+
+
+
+      <!-- --------------------------------------------------------------------------------------------------------
+
+              HELP DIV 
+
+      -->
+      <div class='middleDiv' id='helpDiv'>
+        <h1> FAQ: </h1>
+
+          <h2> What is Robart? </h2>
+          <p> Robart is a Robotic Access and Retrieval System. In other words, it is an AI-powered warehouse 
+            management system that can help you retrieve warehouse stock using natural human speech. For 
+            demonstration purposes, this client includes a WeBots simulation that is able to depict a given 
+            warehouse and the robot's movement throughout.
+          </p>
+          <h2> How does it work? </h2>
+          <p> First, you enter the desired item using the textbox in the bottom right of the screen; alternatively,
+            you may use the IBM Watson-powered speech to text service by clicking the microphone icon on the left
+            side of the textbox. You can see a conversational interface that allows you to communicate with the 
+            Watson assistant to determine the item you have chosen for retrieval. Once the robot knows what to get,
+            it will retrieve it! It's that simple!
+          </p>
+          <h2> What if Robart brings me the wrong item? </h2>
+          <p> We hope to avoid this scenario by offering you a selection of items that match your query in case it
+            is vague or coressponding to multiple items. In the rare cases that situation skipped and Robart assumes
+            a higher level of certainty that it should have, you have a button to report wrong deliveries that the 
+            Watson Assistant will learn from and avoid in the future. Furthermore, you may simply ask Robart to return 
+            the item.
+          </p>
+          <h2> I want to run the simulation but do not have a powerful computer on premises, what can I do? </h2>
+          <p> The Robart system is designed over a host-client interface. For most of our testing and development,
+            we had a more powerful machine running the robotic simulation that we connected to using the field in the
+            top right corner of the page. Since we got a lot of value and ease of use from this functionality, we
+            decided to bring it to you!
+          </p>
+          <h2> How hard is it to port from simulation to real-world robots?</h2>
+          <p>The Robart system is designed with portability in mind. Each robot runs its own program code in a 
+            separate process, so these can be de-centralized and ported to the hardware of each robot you use. 
+            The code refers to the the simulation controls abstractly, rather than directly, so porting to new 
+            hardware can be as simple as implementing the required interface for a hardware controller.</p>
+
+            <div> 
+              <iframe style="height: 40vh"src="https://twilio-chat-qs.glitch.me" title="Twilio Embed"></iframe> </div>
+      </div>
+
+
+
+      <!-- -------------------------------------------------------------------------------------------------------
+        
+              INTERACTION 
+    
+      -->
+      <div id="interact">
+        <div id="chatTop">
+          <input type='button'   value='dark_mode'     class="btn btn__color material-icons-sharp"/>
+          <input type='button'   value='accessibility' class="btn btn__color material-icons-sharp"/> 
+          <div id="hostControls">
+            <input type='password' value='localhost'     class="btn"                      id="hostInput"/>
+            <input type='button'   value='dns'           class="btn material-icons-sharp" id="connectButton"/>
+          </div>
+        </div>
+
+        <div id="chatbox">
+          <div id="conversation">
+            <div class="robart"> <p> Hi, I'm Robart, your warehouse management assistant! 
+              You can give me a command using your microphone or by typing in the chat
+              below! </p>
+            </div>
+            <div class="user"> <p> Can you get me a can? </p>
+            </div>
+            <div class="robart"> <p> Sorry, that query was a little vague for me, 
+              I've displayed some options below:</p>
+              <div id="options">
+                <input type='button' value='Paint'>
+                <input type='button' value='Soda'>
+                <input type='button' value='Peas'>
+                <input type='button' value='None of these'>
+              </div>
+            </div>
+
+          </div>
+        </div>  
+        <div id='inputBar'>
+          <input type='button' value='mic'             id='ListenButton' class="btn material-icons-sharp" >
+          <input type='text'                           id='TextToSend'   class="btn" >
+          <input type='button' value='keyboard_return' id='SendButton'   class="btn material-icons-sharp" />
+        </div>
+      </div>
+
+
+
     </div>
+
   </body>
+
 </html>

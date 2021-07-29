@@ -3,13 +3,16 @@ const path = require('path')
 
 function createWindow () {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1800,
+        height: 900,
+        frame: false,
+        roundedCorners: true,
         title: "ROBART",
         icon: path.join(__dirname, "assets/robartIcon.png"),
         webPreferences: {
             preload: path.join(__dirname, "scripts/preload.js"),
-            contextIsolation: true
+            contextIsolation: true,
+            enableRemoteModule: true
         }
     })
 
@@ -26,7 +29,9 @@ app.whenReady().then(() => {
     })
 })
 
+
 /* Closes process when all windows are closed on windows and linux. */
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit()
 })
+
