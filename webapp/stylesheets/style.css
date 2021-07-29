@@ -34,6 +34,13 @@
   --buttonBackground: var(--lightgreen);
   --buttonForeground: var(--gray3);
 }
+:root.accessible {
+
+}
+
+:root.corporate {
+
+}
 
 
 
@@ -142,21 +149,20 @@ textarea:focus, input:focus{
         PLAYER DIV
 
 */
-
-#playerHeader {
-
-}
-
-#playerDiv {
+.middleDiv {
   flex: 2;
   display: flex;
   flex-direction: column;
   height: 100vh;
   background-color: var(--secondary);
+  }
+
+#playerDiv {
+
 }
 
 #toolBar {
-  background-color: var(--gray3);
+  background-color: var(--background);
 }
 
 #chatTop {
@@ -178,6 +184,65 @@ textarea:focus, input:focus{
   background-color: var(--green1); 
   transition-duration: 0.8s;
   color: var(--background);
+}
+
+
+
+
+
+/* -----------------------------------------------------
+
+        INVENTORY DIV
+
+*/
+
+#inventoryDiv {
+  display: none;
+  padding: 50px;
+  color: white;
+  overflow: scroll;
+}
+
+#database {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#database td, #customers th {
+  padding: 8px;
+}
+
+#database tr:nth-child(even){
+  background-color: var(--gray1);
+  color: var(--gray3);
+  margin: 5px;
+}
+
+
+#database th {
+  padding: 12px;
+  text-align: left;
+  background-color: var(--darkgreen);
+  color: white;
+  align-items: center;
+  justify-content: center;
+} 
+
+
+
+
+/* -----------------------------------------------------
+
+        HELP DIV
+
+*/
+
+#helpDiv {
+  padding: 50px;
+  color: white;
+  display: none;
+  overflow: scroll;
 }
 
 

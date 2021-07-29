@@ -1,15 +1,15 @@
+
+
 var view = null,
-  connectButton = null,
   listenButton = null
+  sendButton = null,
   overlay = null,
   textArea = null,
   audio = null,
   audioChunks = [],
-  playerDiv = null,
   hostname = null,
   mobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-  
 if (mobileDevice) {
   let head = document.getElementsByTagName('head')[0];
   let jqueryTouch = document.createElement('script');
@@ -70,13 +70,58 @@ function init() {
     });
   } else { alert('getUserMedia not supported in this browser.'); }
 
-  connectButton = document.getElementById('ConnectButton');
   listenButton = document.getElementById('ListenButton');
+  sendButton = document.getElementById('SendButton');
   textArea = document.getElementById('TextToSend');
-  playerDiv = document.getElementById('playerDiv');
   overlay = document.getElementById('prompt');
   hostInput = document.getElementById('hostInput');
-//TODO set page default based on os
+
+
+
+
+
+
+
+
+  /**
+   * Sidebar buttons functionality here
+   */
+  const playerDiv = document.getElementById('playerDiv');
+  const inventoryDiv = document.getElementById('inventoryDiv');
+  const helpDiv = document.getElementById('helpDiv');
+
+  document.querySelector("#robart").addEventListener("click", () => {
+    playerDiv.style.display = "block"
+    inventoryDiv.style.display = "none"
+    helpDiv.style.display = "none"
+  });
+
+  document.querySelector("#inventory").addEventListener("click", () => {
+    playerDiv.style.display = "none"
+    inventoryDiv.style.display = "block"
+    helpDiv.style.display = "none"
+  });
+
+  document.querySelector("#help").addEventListener("click", () => {
+    playerDiv.style.display = "none"
+    inventoryDiv.style.display = "none"
+    helpDiv.style.display = "block"
+  });
+
+  //TODO close button not working
+  document.querySelector("#closeButton").addEventListener("click", () => {
+    var window = remote.getCurrentWindow();
+    window.close();
+  });
+
+
+
+
+  /**
+   * Interact window functionality here
+   */
+
+  //TODO set page default based on os
   const colorButtons = document.querySelectorAll(".btn__color")
   colorButtons.forEach(btn => {
     btn.addEventListener("click", (event) => {
@@ -90,14 +135,85 @@ function init() {
     });
   });
 
+  //TODO add accessibility stuff
+
   document.querySelector("#connectButton").addEventListener("click", connect)
+
+  //TODO mic functionality broken 
+  listenButton.addEventListener("click", () => {
+    if (listenButton.value = "mic") {
+      audio.start();
+      window.watson.stt();
+      listenButton.value = 'mic_off';
+    } else {
+      audio.stop();
+      listenButton.value = 'mic';
+    }
+  })
+
+  document.addEventListener("keypress", (e) => {
+    if (e.key == 'Enter') {
+      send()
+    }
+  })
+
+  sendButton.addEventListener("click", send);
+
+
+  const suggestions = document.querySelector("#options").childNodes
+    suggestions.forEach(suggestion =>
+      suggestion.addEventListener("click", () => {
+        textArea.value = `Watson please retrieve: ${suggestion.value}`
+        send()
+      }))
+    
+
+  // var table = document.createElement("table");
+  // var columns = ["Item", "Count", "SKU"];
+  // var tr = table.insertRow(-1);
+  // for (var i = 0; i < columns.length; i++) {
+  //   var th = document.createElement('th')
+  //   th.innerHTML = columns[i]
+  //   tr.appendChild(th)
+  // }
+
+
+  //TODO fresh call when the page is pulled up
+  fetch("../server/server/database.json")
+  .then(response => {
+    response.json()
+    .then(db => {
+      var table = document.getElementById("database")
+      for (var i = 1; i < table.rows.length; i++) {
+        var row = table.rows[i]
+
+        var item = row.cells[0].innerHTML
+
+        var count = row.insertCell(-1)
+        count.innerHTML = db.objects[item].count
+
+        var description = row.insertCell(-1)
+        description.innerHTML = db.objects[item].description
+
+        var pos = row.insertCell(-1)
+        pos.innerHTML = db.objects[item].entities[0].pos
+
+        var sku = row.insertCell(-1)
+        sku.innerHTML = db.objects[item].entities[0].sku
+      }
+    });
+  }).catch(e => {
+    console.log(e)
+  });
+
+
+
 }
 
 /**
  * Connects to Webots and the server.
  */
 
-//TODO toggle_on is the slider right and toggle_off is the slider left.
 function connect() {
   hostname = hostInput.value;
 
@@ -107,7 +223,6 @@ function connect() {
     view.setTimeout(-1); // disable timeout that stops the simulation after a given time
     view.open('ws://' + hostname + ':1234', 'x3d');
     view.onquit = disconnect;
-    connectButton.value = 'toggle_on';
     connectButton.onclick = disconnect;
   }
 }
@@ -119,7 +234,6 @@ function disconnect() {
   view.close();
   view = null;
   playerDiv.innerHTML = null;
-  connectButton.value = 'toggle_off';
   connectButton.onclick = show;
   hostname = '';
 }
@@ -128,28 +242,13 @@ function disconnect() {
  * Sends the text to Watson.
  */
 function send() {
+  console.log(`SEND CALLED: ${textArea.value}`)
   window.watson.wa(textArea.value, hostname);
   textArea.value = "";
 }
 
-/**
- * Starts listening.
- */
-function start_listening() {
-  audio.start();
-  window.watson.stt();
-  listenButton.value = 'Stop';
-  listenButton.onclick = stop_listening;
-}
 
-/**
- * Stops listening.
- */
-function stop_listening() {
-  audio.stop();
-  listenButton.value = 'Listen';
-  listenButton.onclick = start_listening;
-}
+
 
 // Launches mic on window load.
 window.addEventListener('load', init, false);
